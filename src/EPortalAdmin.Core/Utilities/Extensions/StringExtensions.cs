@@ -227,6 +227,38 @@ namespace EPortalAdmin.Core.Utilities.Extensions
         /// <returns>True if the string is not a valid credit card number, otherwise false.</returns>
         public static bool IsNotCreditCardNumber(this string @this) =>
             !@this.IsCreditCardNumber();
+
+        /// <summary>
+        /// Checks whether the string matches the MAC address pattern.
+        /// </summary>
+        /// <param name="this">The string to be checked.</param>
+        /// <returns>True if the string is a valid MAC address, otherwise false.</returns>
+        public static bool IsMacAddress(this string @this) =>
+            RegexHelper.MacAddressRegex().IsMatch(@this);
+
+        /// <summary>
+        /// Checks whether the string matches the MAC address pattern.
+        /// </summary>
+        /// <param name="this">The string to be checked.</param>
+        /// <returns>True if the string is a not valid MAC address, otherwise false.</returns>
+        public static bool IsNotMacAddress(this string @this) =>
+            !@this.IsMacAddress();
+
+        /// <summary>
+        /// Checks whether the string matches the IMEI pattern.
+        /// </summary>
+        /// <param name="this">The string to be checked.</param>
+        /// <returns>True if the string is a valid IMEI, otherwise false.</returns>
+        public static bool IsImei(this string @this) =>
+            RegexHelper.ImeiRegex().IsMatch(@this);
+
+        /// <summary>
+        /// Checks whether the string matches the IMEI pattern.
+        /// </summary>
+        /// <param name="this">The string to be checked.</param>
+        /// <returns>True if the string is a not valid IMEI, otherwise false.</returns>
+        public static bool IsNotImei(this string @this) =>
+            !@this.IsImei();
         #endregion
 
         #region To Extensions

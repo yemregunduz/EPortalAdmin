@@ -12,10 +12,12 @@ namespace EPortalAdmin.Core.Middlewares
     public class LoggingMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly LoggerServiceBase _loggerServiceBase;
         private HttpContext _context;
-        public LoggingMiddleware(RequestDelegate next)
+        public LoggingMiddleware(RequestDelegate next, LoggerServiceBase loggerService)
         {
             _next = next;
+            _loggerServiceBase = loggerService;
         }
 
         public async Task Invoke(HttpContext httpContext)
@@ -75,10 +77,9 @@ namespace EPortalAdmin.Core.Middlewares
                 ResponseBody = responseBody,
                 ResponseTimeInMilliseconds = elapsedResponseTimeInMilliseconds,
             };
-            var loggerServiceBase = _context.RequestServices.GetRequiredService<LoggerServiceBase>();
-            loggerServiceBase.Info(JsonConvert.SerializeObject(logDetail));
-        }
 
+            _loggerServiceBase.Info(JsonConvert.SerializeObject(logDetail));
+        }
         private string GetRequestHeaders()
         {
             var request = _context.Request;

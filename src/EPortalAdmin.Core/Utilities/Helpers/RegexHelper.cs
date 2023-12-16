@@ -42,8 +42,12 @@ namespace Yeg.Utilities.Helpers
         [GeneratedRegex(@"^(?:\d{4}-){3}\d{4}$")]
         public static partial Regex CreditCardNumberRegex();
 
-        [GeneratedRegex(@"^(Intel|AMD|ARM)$", RegexOptions.IgnoreCase)]
-        public static partial Regex ProcessorNameRegex();
+        [GeneratedRegex(@"^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$", RegexOptions.IgnoreCase)]
+        public static partial Regex MacAddressRegex();  
+        
+        [GeneratedRegex(@"^([0-9]{15}[\ ]{1})|([0-9]{14}[\/]?[0-9]{2})([\ $]{1})", RegexOptions.IgnoreCase)]
+        public static partial Regex ImeiRegex();
+
 
     }
 }
