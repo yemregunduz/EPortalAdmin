@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{91594C21-A732-483E-AA32-115C864E731E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F7F0B676-C591-4A08-B3DC-B88BDAEF1004}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPortalAdmin.Application", "src\EPortalAdmin.Application\EPortalAdmin.Application.csproj", "{50BA014D-FF90-4617-A673-98DBC14F235C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPortalAdmin.Core", "src\EPortalAdmin.Core\EPortalAdmin.Core.csproj", "{1BA44959-7825-44AA-9DA3-01D5B63CBB98}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPortalAdmin.Domain", "src\EPortalAdmin.Domain\EPortalAdmin.Domain.csproj", "{8006E67D-6197-48CF-BC91-19752DF3EFB7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPortalAdmin.Persistance", "src\EPortalAdmin.Persistance\EPortalAdmin.Persistance.csproj", "{C220D260-6C76-4A4A-B97B-4E283CBE6A2C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPortalAdmin.WebAPI", "src\EPortalAdmin.WebAPI\EPortalAdmin.WebAPI.csproj", "{9A4E80A6-E39F-40DB-8176-FC902A978010}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{50BA014D-FF90-4617-A673-98DBC14F235C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50BA014D-FF90-4617-A673-98DBC14F235C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50BA014D-FF90-4617-A673-98DBC14F235C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50BA014D-FF90-4617-A673-98DBC14F235C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BA44959-7825-44AA-9DA3-01D5B63CBB98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BA44959-7825-44AA-9DA3-01D5B63CBB98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BA44959-7825-44AA-9DA3-01D5B63CBB98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BA44959-7825-44AA-9DA3-01D5B63CBB98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8006E67D-6197-48CF-BC91-19752DF3EFB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8006E67D-6197-48CF-BC91-19752DF3EFB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8006E67D-6197-48CF-BC91-19752DF3EFB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8006E67D-6197-48CF-BC91-19752DF3EFB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C220D260-6C76-4A4A-B97B-4E283CBE6A2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C220D260-6C76-4A4A-B97B-4E283CBE6A2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C220D260-6C76-4A4A-B97B-4E283CBE6A2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C220D260-6C76-4A4A-B97B-4E283CBE6A2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A4E80A6-E39F-40DB-8176-FC902A978010}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A4E80A6-E39F-40DB-8176-FC902A978010}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A4E80A6-E39F-40DB-8176-FC902A978010}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A4E80A6-E39F-40DB-8176-FC902A978010}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{50BA014D-FF90-4617-A673-98DBC14F235C} = {91594C21-A732-483E-AA32-115C864E731E}
+		{1BA44959-7825-44AA-9DA3-01D5B63CBB98} = {91594C21-A732-483E-AA32-115C864E731E}
+		{8006E67D-6197-48CF-BC91-19752DF3EFB7} = {91594C21-A732-483E-AA32-115C864E731E}
+		{C220D260-6C76-4A4A-B97B-4E283CBE6A2C} = {91594C21-A732-483E-AA32-115C864E731E}
+		{9A4E80A6-E39F-40DB-8176-FC902A978010} = {91594C21-A732-483E-AA32-115C864E731E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3896A318-4848-4C6F-8781-7BDE3606416A}
+	EndGlobalSection
+EndGlobal
