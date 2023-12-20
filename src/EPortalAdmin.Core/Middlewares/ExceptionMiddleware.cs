@@ -1,6 +1,8 @@
-﻿using EPortalAdmin.Core.Exceptions;
+﻿using EPortalAdmin.Core.Domain.Enums;
+using EPortalAdmin.Core.Exceptions;
 using EPortalAdmin.Core.Logging;
 using EPortalAdmin.Core.Logging.Serilog;
+using EPortalAdmin.Core.Utilities.Extensions;
 using EPortalAdmin.Core.Utilities.Helpers;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
@@ -83,7 +85,6 @@ namespace EPortalAdmin.Core.Middlewares
         private CustomProblemDetails CreateProblemDetails(HttpContext context, Exception exception, HttpStatusCode statusCode, string type, string title, object errors = null, string innerExceptionDetail = null)
         {
             context.Response.StatusCode = Convert.ToInt32(statusCode);
-
             var problemDetails = new CustomProblemDetails
             {
                 Status = (int)statusCode,
@@ -91,6 +92,8 @@ namespace EPortalAdmin.Core.Middlewares
                 Title = title,
                 Detail = exception.Message,
                 Instance = context.Request.Path,
+                Code = (exception as BaseException)?.Code ?? ExceptionCode.Unknown,
+                CodeDescription = (exception as BaseException)?.Code.GetDescription() ?? ExceptionCode.Unknown.GetDescription()
             };
 
             if (errors != null)

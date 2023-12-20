@@ -10,16 +10,11 @@ using System.Linq.Expressions;
 
 namespace EPortalAdmin.Core.Persistence.Repositories
 {
-    public class EfRepositoryBase<TEntity, TContext> : IRepository<TEntity>
+    public class EfRepositoryBase<TEntity, TContext>(TContext context) : IRepository<TEntity>
         where TEntity : BaseEntity
         where TContext : DbContext
     {
-        protected TContext Context { get; }
-
-        public EfRepositoryBase(TContext context)
-        {
-            Context = context;
-        }
+        protected TContext Context { get; } = context;
 
         public async Task<IList<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? predicate = null,
                                                 Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,

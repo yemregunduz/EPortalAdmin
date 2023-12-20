@@ -19,7 +19,7 @@ namespace EPortalAdmin.Core.Security.JWT
         {
             Configuration = configuration;
             _tokenOptions = Configuration.GetSection(TokenOptions.AppSettingsKey).Get<TokenOptions>()
-                ?? throw new ArgumentNullException(nameof(TokenOptions));
+                                ?? throw new ArgumentNullException(nameof(TokenOptions));
         }
 
         public AccessToken CreateToken(User user, IList<OperationClaim> operationClaims)
