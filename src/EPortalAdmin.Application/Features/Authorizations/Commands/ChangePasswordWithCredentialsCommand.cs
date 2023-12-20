@@ -22,7 +22,7 @@ namespace EPortalAdmin.Application.Features.Authorizations.Commands
 
                 User? user = await Repository.GetAsync(u => u.Email == request.UserForChangePasswordDto.Email,
                     cancellationToken: cancellationToken) ??
-                    throw new NotFoundException(Messages.Authorization.UserNotFound);
+                    throw new NotFoundException(Messages.Authorization.UserNotFound, ExceptionCode.UserNotFound);
 
                 if (!HashingHelper.VerifyPasswordHash(request.UserForChangePasswordDto.Password, user.PasswordHash, user.PasswordSalt))
                     throw new AuthorizationException(Messages.Authorization.InvalidPreviousPassword, ExceptionCode.InvalidPrevoiusPassword);

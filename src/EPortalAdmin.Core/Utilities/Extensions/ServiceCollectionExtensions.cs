@@ -1,6 +1,7 @@
 ﻿using EPortalAdmin.Core.Domain;
 using EPortalAdmin.Core.Domain.Configurations;
 using EPortalAdmin.Core.Domain.Constants;
+using EPortalAdmin.Core.Domain.Enums;
 using EPortalAdmin.Core.Exceptions;
 using EPortalAdmin.Core.FileStorage;
 using EPortalAdmin.Core.FileStorage.Azure;
@@ -49,7 +50,7 @@ namespace EPortalAdmin.Core.Utilities.Extensions
                     services.AddSingleton<LoggerServiceBase, OptimizedLogger>();
                     break;
                 default:
-                    throw new BusinessException(SerilogMessages.InvalidDefaultProvider);
+                    throw new BusinessException(SerilogMessages.InvalidDefaultProvider, ExceptionCode.InvalidDefaultProvider);
             }
 
             return services;
@@ -69,7 +70,7 @@ namespace EPortalAdmin.Core.Utilities.Extensions
                     services.AddScoped<IStorage, LocalStorage>();
                     break;
                 default:
-                    throw new BusinessException(StorageMessages.InvalidDefaultProvider);
+                    throw new BusinessException(StorageMessages.InvalidDefaultProvider, ExceptionCode.InvalidDefaultProvider);
             }
 
             services.AddScoped<IStorageService, StorageService>();
@@ -104,7 +105,8 @@ namespace EPortalAdmin.Core.Utilities.Extensions
         {
             TokenOptions? tokenOptions = configuration.GetSection(TokenOptions.AppSettingsKey)
                                             .Get<TokenOptions>()
-                                                ?? throw new InvalidOperationException($"\"{TokenOptions.AppSettingsKey}\" section cannot found in configuration.");
+                                                ?? throw new NotFoundException(
+                                                    $"\"{TokenOptions.AppSettingsKey}\" section cannot found in configuration.",ExceptionCode.TokenOptionsKeyNotFound);
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {

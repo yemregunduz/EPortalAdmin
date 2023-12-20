@@ -1,4 +1,5 @@
-﻿using EPortalAdmin.Core.Exceptions;
+﻿using EPortalAdmin.Core.Domain.Enums;
+using EPortalAdmin.Core.Exceptions;
 using EPortalAdmin.Core.Utilities.Extensions;
 using EPortalAdmin.Core.Utilities.Extensions.Claims;
 using EPortalAdmin.Domain.Constants;
@@ -12,8 +13,8 @@ namespace EPortalAdmin.Application.Pipelines.Authorization
     {
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
-            List<string>? roleClaims = httpContextAccessor.HttpContext.User.ClaimRoles() ??
-                throw new AuthorizationException(Messages.Authorization.ClaimsNotFound);
+            List<string>? roleClaims = httpContextAccessor.HttpContext!.User.ClaimRoles() ??
+                throw new AuthorizationException(Messages.Authorization.ClaimsNotFound,ExceptionCode.ClaimsNotFound);
 
             var controllerName = httpContextAccessor.HttpContext.GetCurrentController();
             var actionName = httpContextAccessor.HttpContext.GetCurrentAction();

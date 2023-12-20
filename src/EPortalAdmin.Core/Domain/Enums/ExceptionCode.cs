@@ -35,5 +35,15 @@ namespace EPortalAdmin.Core.Domain.Enums
         AuthenticatorMustBeVerified,
         InvalidAuthenticatorCode,
         UserAlreadyHasOperationClaim,
+        RefreshTokenNotFound,
+        ClaimsNotFound,
+        OperationClaimAlreadyExist,
+        EndpointNotFound,
+        InvalidDefaultProvider,
+        TokenOptionsKeyNotFound,
+        EndpointOperationClaimNotFound,
+        OperationClaimNotFound,
+        EntityNotFound,
+        UserOperationClaimNotFound,
     }
 }

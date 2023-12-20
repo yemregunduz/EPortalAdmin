@@ -2,6 +2,7 @@
 using EPortalAdmin.Application.ViewModels.OperationClaim;
 using EPortalAdmin.Application.Wrappers.Results;
 using EPortalAdmin.Core.Domain.Entities;
+using EPortalAdmin.Core.Domain.Enums;
 using EPortalAdmin.Core.Exceptions;
 using EPortalAdmin.Domain.Constants;
 using MediatR;
@@ -21,7 +22,7 @@ namespace EPortalAdmin.Application.Features.OperationClaims.Commands
                 await businessRules.OperationClaimNameCanNotBeDuplicated(request.Name);
 
                 OperationClaim? operationClaim = await Repository.GetAsync(o => o.Id == request.Id, cancellationToken: cancellationToken)
-                    ?? throw new NotFoundException(Messages.OperationClaim.OperationClaimNotFound);
+                    ?? throw new NotFoundException(Messages.OperationClaim.OperationClaimNotFound, ExceptionCode.OperationClaimNotFound);
 
                 Mapper.Map(request, operationClaim);
 

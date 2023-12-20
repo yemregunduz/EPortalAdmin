@@ -2,6 +2,7 @@
 using EPortalAdmin.Application.ViewModels.UserOperationClaim;
 using EPortalAdmin.Application.Wrappers.Results;
 using EPortalAdmin.Core.Domain.Entities;
+using EPortalAdmin.Core.Domain.Enums;
 using EPortalAdmin.Core.Exceptions;
 using EPortalAdmin.Domain.Constants;
 using MediatR;
@@ -31,7 +32,7 @@ namespace EPortalAdmin.Application.Features.UserOperationClaims.Queries
                     predicate: uoc => uoc.UserId == request.UserId,
                     include: m => m.Include(uoc => uoc.OperationClaim),
                     cancellationToken: cancellationToken)
-                    ?? throw new NotFoundException(Messages.UserOperationClaim.UserOperationClaimNotFound);
+                    ?? throw new NotFoundException(Messages.UserOperationClaim.UserOperationClaimNotFound,ExceptionCode.UserOperationClaimNotFound);
 
                 IList<UserOperationClaimDto> mappedUserOperationClaims = Mapper.Map<IList<UserOperationClaimDto>>(userOperationClaims);
                 return new SuccessDataResult<IList<UserOperationClaimDto>>(mappedUserOperationClaims, Messages.UserOperationClaim.GetUserOperationClaimSuccessfully);

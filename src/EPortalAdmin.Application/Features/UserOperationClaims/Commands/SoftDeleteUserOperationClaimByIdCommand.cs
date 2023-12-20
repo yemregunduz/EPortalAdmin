@@ -1,6 +1,7 @@
 ﻿using EPortalAdmin.Application.ViewModels.UserOperationClaim;
 using EPortalAdmin.Application.Wrappers.Results;
 using EPortalAdmin.Core.Domain.Entities;
+using EPortalAdmin.Core.Domain.Enums;
 using EPortalAdmin.Core.Exceptions;
 using EPortalAdmin.Domain.Constants;
 using MediatR;
@@ -18,7 +19,7 @@ namespace EPortalAdmin.Application.Features.UserOperationClaims.Commands
             {
                 UserOperationClaim userOperationClaim =
                     await Repository.GetAsync(m => m.Id == request.Id, cancellationToken: cancellationToken)
-                        ?? throw new NotFoundException(Messages.UserOperationClaim.UserOperationClaimNotFound);
+                        ?? throw new NotFoundException(Messages.UserOperationClaim.UserOperationClaimNotFound, ExceptionCode.UserOperationClaimNotFound);
 
                 userOperationClaim.MarkAsDelete(CurrentUserId);
                 await Repository.SaveChangesAsync(cancellationToken);

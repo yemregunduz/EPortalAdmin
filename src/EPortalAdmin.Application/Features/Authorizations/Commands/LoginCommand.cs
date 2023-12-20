@@ -24,10 +24,10 @@ namespace EPortalAdmin.Application.Features.Authorizations.Commands
             public async Task<DataResult<LoggedInDto>> Handle(LoginCommand request, CancellationToken cancellationToken)
             {
                 User? user = await Repository.GetAsync(predicate: u => u.Email == request.UserForLoginDto.Email, cancellationToken: cancellationToken)
-                    ?? throw new NotFoundException(Messages.Authorization.UserNotFound);
+                    ?? throw new NotFoundException(Messages.Authorization.UserNotFound, ExceptionCode.UserNotFound);
 
                 if (!HashingHelper.VerifyPasswordHash(request.UserForLoginDto.Password, user.PasswordHash, user.PasswordSalt))
-                    throw new AuthorizationException(Messages.Authorization.InvalidCredentials);
+                    throw new AuthorizationException(Messages.Authorization.InvalidCredentials, ExceptionCode.InvalidCredentials);
 
 
                 LoggedInDto loggedInDto = new();

@@ -1,4 +1,5 @@
 ﻿using EPortalAdmin.Core.Domain.Entities;
+using EPortalAdmin.Core.Domain.Enums;
 using EPortalAdmin.Core.Exceptions;
 using EPortalAdmin.Core.Persistence.Dynamic;
 using EPortalAdmin.Core.Persistence.Paging;
@@ -130,7 +131,7 @@ namespace EPortalAdmin.Core.Persistence.Repositories
         public async Task<TEntity> DeleteByPredicateAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
         {
             TEntity? model = await GetAsync(predicate)
-                ?? throw new NotFoundException($"{EntityNameTranslateHelper.Turkish(typeof(TEntity).Name)} bulunamadı.");
+                ?? throw new NotFoundException($"{EntityNameTranslateHelper.Turkish(typeof(TEntity).Name)} bulunamadı.",ExceptionCode.EntityNotFound);
             return await DeleteAsync(model);
         }
 
@@ -237,7 +238,7 @@ namespace EPortalAdmin.Core.Persistence.Repositories
         public TEntity DeleteByPredicate(Expression<Func<TEntity, bool>> predicate)
         {
             TEntity? model = Get(predicate)
-                ?? throw new NotFoundException($"{EntityNameTranslateHelper.Turkish(typeof(TEntity).Name)} bulunamadı.");
+                ?? throw new NotFoundException($"{EntityNameTranslateHelper.Turkish(typeof(TEntity).Name)} bulunamadı.", ExceptionCode.EntityNotFound);
 
             return Delete(model);
         }

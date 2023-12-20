@@ -31,7 +31,7 @@ namespace EPortalAdmin.Application.Features.Authorizations.Commands
             public async Task<Result> Handle(VerifyOtpAuthenticatorCommand request, CancellationToken cancellationToken)
             {
                 OtpAuthenticator? otpAuthenticator = await Repository.GetAsync(predicate: e => e.UserId == CurrentUserId, cancellationToken: cancellationToken)
-                    ?? throw new NotFoundException(Messages.Authorization.OtpAuthenticatorNotFound);
+                    ?? throw new NotFoundException(Messages.Authorization.OtpAuthenticatorNotFound, ExceptionCode.AuthenticatorNotFound);
 
                 User? user = await userRepository.GetAsync(predicate: u => u.Id == CurrentUserId, cancellationToken: cancellationToken)
                     ?? throw new NotFoundException(Messages.Authorization.UserNotFound);

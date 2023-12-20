@@ -3,6 +3,7 @@ using EPortalAdmin.Application.Services.AuthService;
 using EPortalAdmin.Application.ViewModels.Authorization;
 using EPortalAdmin.Application.Wrappers.Results;
 using EPortalAdmin.Core.Domain.Entities;
+using EPortalAdmin.Core.Domain.Enums;
 using EPortalAdmin.Core.Exceptions;
 using EPortalAdmin.Domain.Constants;
 using MediatR;
@@ -20,7 +21,7 @@ namespace EPortalAdmin.Application.Features.Authorizations.Commands
             public async Task<DataResult<RevokedTokenDto>> Handle(RevokeRefreshTokenCommand request, CancellationToken cancellationToken)
             {
                 RefreshToken? refreshToken = await authService.GetRefreshTokenByToken(request.Token)
-                    ?? throw new NotFoundException(Messages.Authorization.RefreshTokenNotFound);
+                    ?? throw new NotFoundException(Messages.Authorization.RefreshTokenNotFound,ExceptionCode.RefreshTokenNotFound);
 
                 await authorizationBusinessRules.RefreshTokenShouldBeActive(refreshToken!);
 

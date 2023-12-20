@@ -3,6 +3,7 @@ using EPortalAdmin.Application.Services.AuthService;
 using EPortalAdmin.Application.ViewModels.Authorization;
 using EPortalAdmin.Application.Wrappers.Results;
 using EPortalAdmin.Core.Domain.Entities;
+using EPortalAdmin.Core.Domain.Enums;
 using EPortalAdmin.Core.Exceptions;
 using EPortalAdmin.Core.Security.JWT;
 using EPortalAdmin.Domain.Constants;
@@ -24,7 +25,7 @@ namespace EPortalAdmin.Application.Features.Authorizations.Commands
             public async Task<DataResult<RefreshedTokenDto>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
             {
                 RefreshToken refreshToken = await _authService.GetRefreshTokenByToken(request.RefreshToken)
-                    ?? throw new AuthorizationException(Messages.Authorization.RefreshTokenNotFound);
+                    ?? throw new AuthorizationException(Messages.Authorization.RefreshTokenNotFound,ExceptionCode.RefreshTokenNotFound);
 
                 if (refreshToken!.Revoked != null)
                 {
@@ -37,7 +38,7 @@ namespace EPortalAdmin.Application.Features.Authorizations.Commands
                 await _authorizationBusinessRules.RefreshTokenShouldBeActive(refreshToken);
 
                 User user = await Repository.GetAsync(predicate: u => u.Id == refreshToken.UserId, cancellationToken: cancellationToken)
-                    ?? throw new NotFoundException(Messages.Authorization.UserNotFound);
+                    ?? throw new NotFoundException(Messages.Authorization.UserNotFound, ExceptionCode.UserNotFound);
 
                 RefreshToken newRefreshToken = await _authService.RotateRefreshToken(user: user!, refreshToken, request.IpAddress);
 

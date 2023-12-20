@@ -4,6 +4,7 @@ using EPortalAdmin.Application.Services.AuthenticatorService;
 using EPortalAdmin.Application.ViewModels.OtpAuthenticator;
 using EPortalAdmin.Application.Wrappers.Results;
 using EPortalAdmin.Core.Domain.Entities;
+using EPortalAdmin.Core.Domain.Enums;
 using EPortalAdmin.Core.Exceptions;
 using EPortalAdmin.Domain.Constants;
 using MediatR;
@@ -18,7 +19,7 @@ namespace EPortalAdmin.Application.Features.Authorizations.Commands
             public async Task<DataResult<OtpAuthenticatorDto>> Handle(EnableOtpAuthenticatorCommand request, CancellationToken cancellationToken)
             {
                 User user = await userRepository.GetAsync(predicate: u => u.Id == CurrentUserId, cancellationToken: cancellationToken)
-                    ?? throw new NotFoundException(Messages.Authorization.UserNotFound);
+                    ?? throw new NotFoundException(Messages.Authorization.UserNotFound, ExceptionCode.UserNotFound);
 
                 await authBusinessRules.UserShouldNotBeHaveAuthenticator(user!);
                 OtpAuthenticator? doesExistOtpAuthenticator = await Repository.GetAsync(predicate: o => o.UserId == CurrentUserId, cancellationToken: cancellationToken);

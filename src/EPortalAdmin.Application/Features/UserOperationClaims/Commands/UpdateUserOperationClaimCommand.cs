@@ -2,6 +2,7 @@
 using EPortalAdmin.Application.ViewModels.UserOperationClaim;
 using EPortalAdmin.Application.Wrappers.Results;
 using EPortalAdmin.Core.Domain.Entities;
+using EPortalAdmin.Core.Domain.Enums;
 using EPortalAdmin.Core.Exceptions;
 using EPortalAdmin.Domain.Constants;
 using MediatR;
@@ -23,12 +24,12 @@ namespace EPortalAdmin.Application.Features.UserOperationClaims.Commands
                 await userOperationClaimBusinessRules.CheckIfOperationClaimExist(request.OperationClaimId);
                 await userOperationClaimBusinessRules.CheckIfUserHasOperationClaim(request.UserId, request.OperationClaimId);
 
-                UserOperationClaim? userOperationClaim = await Repository.GetAsync(uoc => uoc.Id == request.Id)
-                ?? throw new NotFoundException(Messages.UserOperationClaim.UserOperationClaimNotFound);
+                UserOperationClaim? userOperationClaim = await Repository.GetAsync(uoc => uoc.Id == request.Id, cancellationToken:cancellationToken)
+                ?? throw new NotFoundException(Messages.UserOperationClaim.UserOperationClaimNotFound,ExceptionCode.UserOperationClaimNotFound);
 
                 Mapper.Map(request, userOperationClaim);
 
-                UserOperationClaim updatedUserOperationClaim = await Repository.UpdateAsync(userOperationClaim);
+                UserOperationClaim updatedUserOperationClaim = await Repository.UpdateAsync(userOperationClaim,cancellationToken);
 
                 UserOperationClaimDto mappedOperationClaim = Mapper.Map<UserOperationClaimDto>(updatedUserOperationClaim);
 

@@ -2,6 +2,7 @@
 using EPortalAdmin.Application.ViewModels.EndpointOperationClaim;
 using EPortalAdmin.Application.Wrappers.Results;
 using EPortalAdmin.Core.Domain.Entities;
+using EPortalAdmin.Core.Domain.Enums;
 using EPortalAdmin.Core.Exceptions;
 using EPortalAdmin.Domain.Constants;
 using MediatR;
@@ -22,7 +23,7 @@ namespace EPortalAdmin.Application.Features.EndpointOperationClaims.Commands
                 await endpointOperationClaimBusinessRules.ValidateAsync(request.EndpointId, request.OperationClaimId);
 
                 EndpointOperationClaim endpointOperationClaim = await Repository.GetAsync(e=>e.Id == request.Id,cancellationToken:cancellationToken)
-                    ?? throw new NotFoundException(Messages.EndpointOperationClaim.EndpointOperationClaimNotFound);
+                    ?? throw new NotFoundException(Messages.EndpointOperationClaim.EndpointOperationClaimNotFound, ExceptionCode.EndpointOperationClaimNotFound);
 
                 Mapper.Map(request, endpointOperationClaim);
                 EndpointOperationClaim updatedEndpointOperationClaim = await Repository.UpdateAsync(endpointOperationClaim, cancellationToken);

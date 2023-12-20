@@ -22,7 +22,7 @@ namespace EPortalAdmin.Application.Features.Authorizations.Commands
             public async Task Handle(EnableEmailAuthenticatorCommand request, CancellationToken cancellationToken)
             {
                 User? user = await userRepository.GetAsync(predicate: u => u.Id == CurrentUserId, cancellationToken: cancellationToken) ??
-                    throw new NotFoundException(Messages.User.UserNotFound);
+                    throw new NotFoundException(Messages.User.UserNotFound, ExceptionCode.UserNotFound);
 
                 await authorizationBusinessRules.UserShouldNotBeHaveAuthenticator(user);
 

@@ -1,6 +1,7 @@
 ﻿using EPortalAdmin.Application.ViewModels.User;
 using EPortalAdmin.Application.Wrappers.Results;
 using EPortalAdmin.Core.Domain.Entities;
+using EPortalAdmin.Core.Domain.Enums;
 using EPortalAdmin.Core.Exceptions;
 using EPortalAdmin.Domain.Constants;
 using MediatR;
@@ -20,7 +21,7 @@ namespace EPortalAdmin.Application.Features.Users.Queries
                     include: m => m.Include(u => u.UserOperationClaims).ThenInclude(uoc => uoc.OperationClaim),
                     predicate: u => u.Email == request.EmailAddress,
                     cancellationToken: cancellationToken)
-                    ?? throw new NotFoundException(Messages.User.UserNotFound);
+                    ?? throw new NotFoundException(Messages.User.UserNotFound, ExceptionCode.UserNotFound);
 
                 UserDto mappedUser = Mapper.Map<UserDto>(user);
 

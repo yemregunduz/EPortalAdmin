@@ -1,6 +1,7 @@
 ﻿using EPortalAdmin.Application.ViewModels.OperationClaim;
 using EPortalAdmin.Application.Wrappers.Results;
 using EPortalAdmin.Core.Domain.Entities;
+using EPortalAdmin.Core.Domain.Enums;
 using EPortalAdmin.Core.Exceptions;
 using EPortalAdmin.Domain.Constants;
 using MediatR;
@@ -16,7 +17,7 @@ namespace EPortalAdmin.Application.Features.OperationClaims.Commands
             public async Task<DataResult<OperationClaimDto>> Handle(SoftDeleteOperationClaimByIdCommand request, CancellationToken cancellationToken)
             {
                 OperationClaim operationClaim = await Repository.GetAsync(m => m.Id == request.Id, cancellationToken: cancellationToken)
-                        ?? throw new NotFoundException(Messages.OperationClaim.OperationClaimNotFound);
+                        ?? throw new NotFoundException(Messages.OperationClaim.OperationClaimNotFound, ExceptionCode.OperationClaimNotFound);
 
                 operationClaim.MarkAsDelete(CurrentUserId);
                 await Repository.SaveChangesAsync(cancellationToken);
