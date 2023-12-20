@@ -35,7 +35,7 @@ namespace EPortalAdmin.Application.Features.Authorizations.Commands
                     Status = true,
                 };
 
-                User createdUser = await Repository.AddAsync(user);
+                User createdUser = await Repository.AddAsync(user,cancellationToken);
 
                 AccessToken createdAccessToken = await authService.CreateAccessToken(createdUser);
                 RefreshToken createdRefreshToken = await authService.CreateRefreshToken(createdUser, request.IpAddress);

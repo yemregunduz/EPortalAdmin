@@ -22,7 +22,7 @@ namespace EPortalAdmin.Application.Features.EndpointOperationClaims.Rules
                 await endpointOperationClaimRepository.GetAsync(c => c.EndpointId == endpointId && c.OperationClaimId == operationClaimId, enableTracking: false);
 
             if (EndpointOperationClaim is not null)
-                throw new BusinessException(Messages.EndpointOperationClaim.EndpointOperationClaimAlreadyExist,ExceptionCode.EndpoindAlreadyHasOperationClaim);
+                throw new BusinessException(Messages.EndpointOperationClaim.EndpointOperationClaimAlreadyExist,ExceptionCode.EndpointAlreadyHasOperationClaim);
         }
 
         public async Task CheckIfExploreEndpointExist(int EndpointId)

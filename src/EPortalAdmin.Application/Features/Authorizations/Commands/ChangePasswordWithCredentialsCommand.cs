@@ -25,7 +25,7 @@ namespace EPortalAdmin.Application.Features.Authorizations.Commands
                     throw new NotFoundException(Messages.Authorization.UserNotFound, ExceptionCode.UserNotFound);
 
                 if (!HashingHelper.VerifyPasswordHash(request.UserForChangePasswordDto.Password, user.PasswordHash, user.PasswordSalt))
-                    throw new AuthorizationException(Messages.Authorization.InvalidPreviousPassword, ExceptionCode.InvalidPrevoiusPassword);
+                    throw new AuthorizationException(Messages.Authorization.InvalidPreviousPassword, ExceptionCode.InvalidPreviousPassword);
 
                 HashingHelper.CreatePasswordHash(request.UserForChangePasswordDto.NewPassword, out byte[] passwordHash, out byte[] passwordSalt);
 
