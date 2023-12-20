@@ -43,12 +43,12 @@ namespace EPortalAdmin.Persistence
                 switch (data.State)
                 {
                     case EntityState.Added:
-                        data.Entity.CreatedDate = DateTime.UtcNow;
+                        data.Entity.CreatedDate = DateTime.Now;
                         data.Entity.CreatedBy = userId;
                         break;
 
                     case EntityState.Modified:
-                        data.Entity.UpdatedDate = DateTime.UtcNow;
+                        data.Entity.UpdatedDate = DateTime.Now;
                         data.Entity.UpdatedBy = userId;
                         break;
                 }
