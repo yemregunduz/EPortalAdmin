@@ -1,8 +1,9 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Http;
-using EPortalAdmin.Core.Exceptions;
-using EPortalAdmin.Domain.Constants;
+﻿using EPortalAdmin.Core.Exceptions;
+using EPortalAdmin.Core.Utilities.Extensions;
 using EPortalAdmin.Core.Utilities.Extensions.Claims;
+using EPortalAdmin.Domain.Constants;
+using MediatR;
+using Microsoft.AspNetCore.Http;
 
 namespace EPortalAdmin.Application.Pipelines.Authorization
 {
@@ -21,11 +22,15 @@ namespace EPortalAdmin.Application.Pipelines.Authorization
             List<string>? roleClaims = _httpContextAccessor.HttpContext.User.ClaimRoles() ??
                 throw new AuthorizationException(Messages.Authorization.ClaimsNotFound);
 
-            bool isAuthorized =
-                request.Roles is null || !request.Roles.Any() || request.Roles.Any(role => roleClaims?.Contains(role) == true);
+            var controllerName = _httpContextAccessor.HttpContext.GetCurrentController();
+            var actionName = _httpContextAccessor.HttpContext.GetCurrentAction();
 
-            if (!isAuthorized)
-                throw new AuthorizationException(Messages.Authorization.NotAuthorized);
+
+            //bool isAuthorized =
+            //    request.Roles is null || !request.Roles.Any() || request.Roles.Any(role => roleClaims?.Contains(role) == true);
+
+            //if (!isAuthorized)
+            //    throw new AuthorizationException(Messages.Authorization.NotAuthorized);
 
             TResponse response = await next();
             return response;

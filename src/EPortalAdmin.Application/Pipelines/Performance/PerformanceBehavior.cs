@@ -1,5 +1,5 @@
-﻿using MediatR;
-using EPortalAdmin.Core.Logging.Serilog;
+﻿using EPortalAdmin.Core.Logging.Serilog;
+using MediatR;
 using System.Diagnostics;
 
 namespace EPortalAdmin.Application.Pipelines.Performance
@@ -10,7 +10,7 @@ namespace EPortalAdmin.Application.Pipelines.Performance
         private readonly Stopwatch _stopwatch;
         private readonly LoggerServiceBase _loggerService;
 
-        public PerformanceBehavior(Stopwatch stopwatch,LoggerServiceBase loggerServiceBase)
+        public PerformanceBehavior(Stopwatch stopwatch, LoggerServiceBase loggerServiceBase)
         {
             _stopwatch = stopwatch;
             _loggerService = loggerServiceBase;
@@ -27,9 +27,9 @@ namespace EPortalAdmin.Application.Pipelines.Performance
             }
             finally
             {
-                if(_stopwatch.Elapsed.TotalSeconds > request.Interval)
+                if (_stopwatch.Elapsed.TotalSeconds > request.Interval)
                 {
-                    _loggerService.Info($"Performance -> {request.GetType().Name} {_stopwatch.Elapsed.TotalSeconds}");
+                    _loggerService.Warn($"Performance -> {request.GetType().Name} {_stopwatch.Elapsed.TotalSeconds}");
                 }
 
                 _stopwatch.Restart();

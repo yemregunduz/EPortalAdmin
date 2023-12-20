@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Web;
 namespace EPortalAdmin.Core.Utilities.Helpers
 {
     public static class CookieHelper

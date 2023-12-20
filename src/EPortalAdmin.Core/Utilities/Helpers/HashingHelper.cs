@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace EPortalAdmin.Core.Security.Hashing
+namespace EPortalAdmin.Core.Utilities.Helpers
 {
     public class HashingHelper
     {

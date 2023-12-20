@@ -1,8 +1,8 @@
 ﻿using EPortalAdmin.Core.Logging.Serilog.ConfigurationModels;
 using Microsoft.Extensions.Configuration;
+using Serilog;
 using Serilog.Formatting.Elasticsearch;
 using Serilog.Sinks.Elasticsearch;
-using Serilog;
 
 namespace EPortalAdmin.Core.Logging.Serilog.Logger
 {

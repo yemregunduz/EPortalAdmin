@@ -1,26 +1,17 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.DependencyInjection;
-using EPortalAdmin.Core.Logging;
+﻿using EPortalAdmin.Core.Logging;
 using EPortalAdmin.Core.Logging.Serilog;
+using EPortalAdmin.Core.Utilities.Helpers;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System.Diagnostics;
-using EPortalAdmin.Core.Utilities.Extensions.Claims;
 
 namespace EPortalAdmin.Core.Middlewares
 {
-    public class LoggingMiddleware
+    public class LoggingMiddleware(LoggerServiceBase loggerService) : IMiddleware
     {
-        private readonly RequestDelegate _next;
-        private readonly LoggerServiceBase _loggerServiceBase;
         private HttpContext _context;
-        public LoggingMiddleware(RequestDelegate next, LoggerServiceBase loggerService)
-        {
-            _next = next;
-            _loggerServiceBase = loggerService;
-        }
 
-        public async Task Invoke(HttpContext httpContext)
+        public async Task InvokeAsync(HttpContext httpContext, RequestDelegate next)
         {
             _context = httpContext;
             var requestBody = string.Empty;
@@ -41,7 +32,7 @@ namespace EPortalAdmin.Core.Middlewares
 
                 var timer = Stopwatch.StartNew();
 
-                await _next(_context);
+                await next(_context);
 
                 timer.Stop();
                 elapsedResponseTimeInMilliseconds = timer.ElapsedMilliseconds;
@@ -54,77 +45,17 @@ namespace EPortalAdmin.Core.Middlewares
             finally
             {
                 _context.Response.Body = originalBody;
-                CreateLog(requestBody, responseBody, elapsedResponseTimeInMilliseconds);
+                CreateServiceLog(requestBody, responseBody, elapsedResponseTimeInMilliseconds);
             }
 
 
         }
-        private void CreateLog(string requestBody, string responseBody, long elapsedResponseTimeInMilliseconds)
+        private void CreateServiceLog(string requestBody, string responseBody, long elapsedResponseTimeInMilliseconds)
         {
-            LogDetail logDetail = new()
-            {
-                Action = CurrentAction,
-                Controller = CurrentController,
-                IpAddress = CurrentIpAddress,
-                HttpMethod = CurrentHttpMethod,
-                ResponseHttpStatusCode = CurrentResponseStatusCode,
-                QueryString = CurrentQueryString,
-                BrowserName = CurrentUserAgent,
-                HttpHeaders = CurrentRequestHeaders,
-                RouteValuesJson = CurrentRouteValues,
-                UserId = CurrentUserId,
-                RequestBody = requestBody,
-                ResponseBody = responseBody,
-                ResponseTimeInMilliseconds = elapsedResponseTimeInMilliseconds,
-            };
+            LogDetail logDetail = LoggingHelper.GetLogDetail(_context, requestBody, responseBody, elapsedResponseTimeInMilliseconds);
+            SerilogHelpers.PushLogDetailProperty(logDetail);
 
-            _loggerServiceBase.Info(JsonConvert.SerializeObject(logDetail));
+            loggerService.Info(JsonConvert.SerializeObject(logDetail));
         }
-        private string GetRequestHeaders()
-        {
-            var request = _context.Request;
-            var headerList = new Dictionary<string, string>(request.Headers.Count);
-            foreach (var header in request.Headers)
-            {
-                headerList.Add(header.Key, header.Value);
-            }
-
-            return JsonConvert.SerializeObject(headerList);
-        }
-
-        private string GetRouteValues()
-        {
-            var routeData = _context.GetRouteData();
-            var routeValues = routeData?.Values;
-
-            if (routeValues == null || routeValues.Count == 0)
-            {
-                return string.Empty;
-            }
-
-            return JsonConvert.SerializeObject(routeValues);
-        }
-
-        
-        private string CurrentUserAgent => _context.Request.Headers["User-Agent"].ToString();
-
-        private string CurrentIpAddress => _context.Connection.RemoteIpAddress.ToString();
-
-        private string CurrentHttpMethod => _context.Request.Method;
-
-        private string CurrentQueryString => _context.Request.QueryString.ToString();
-
-        private string CurrentController => _context.GetRouteValue("Controller")?.ToString() ?? string.Empty;
-
-        private string CurrentAction => _context.GetRouteValue("Action")?.ToString() ?? string.Empty;
-
-        private int CurrentResponseStatusCode => _context.Response.StatusCode;
-
-        private int CurrentUserId => _context.User.GetUserId();
-
-        private string CurrentRouteValues => GetRouteValues();
-
-        private string CurrentRequestHeaders => GetRequestHeaders();
-
     }
 }

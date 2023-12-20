@@ -1,42 +1,57 @@
-using EPortalAdmin.WebAPI;
-using EPortalAdmin.Core.Middlewares;
+using EPortalAdmin.Application;
 using EPortalAdmin.Core;
+using EPortalAdmin.Core.Utilities.Extensions;
+using EPortalAdmin.Core.Utilities.Helpers;
+using EPortalAdmin.Persistence;
+using EPortalAdmin.WebAPI;
+using EPortalAdmin.WebAPI.Controllers;
+using Microsoft.AspNetCore.OData;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-WebApiConfiguration webApiConfiguration =
-    builder.Configuration.GetSection(WebApiConfiguration.AppSettingsKey).Get<WebApiConfiguration>()
-        ?? throw new InvalidOperationException($"\"{WebApiConfiguration.AppSettingsKey}\" section cannot found in configuration.");
-
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services
+    .AddControllers()
+    .AddOData(opt =>
+    {
+        opt.EnableQueryFeatures();
+    });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 builder.Services
+    .AddEndpointsApiExplorer()
+    .AddWebApiServices()
+    .AddPersistenceServices(builder.Configuration)
+    .AddApplicationServices()
     .AddCoreServices(builder.Configuration)
-    .AddCors(options => options.AddDefaultPolicy(policy =>
-        policy.WithOrigins(webApiConfiguration.AllowedOrigins).AllowAnyHeader().AllowAnyMethod().AllowCredentials()
-    ));
+    .AddHttpContextAccessor()
+    .AddCustomCors(builder.Configuration)
+    .AddJwtAuthenticationServices(builder.Configuration);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+HttpContextAccessorSingleton.Configure(app.Services);
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.ConfigureCustomLoggingMiddleware()
+app
+    .ExploreEndpoints<EPortalAdminDbContext, BaseController>(Assembly.GetExecutingAssembly())
+    .UseCustomLoggingMiddleware()
     .UseStaticFiles()
     .UseCors()
     .UseHttpsRedirection()
-    .ConfigureCustomExceptionMiddleware()
+    .UseCustomExceptionMiddleware()
+    .UseAttachUserMiddleware()
     .UseAuthentication()
     .UseAuthorization();
+
+EndpointHelper.SetEndpointList<EPortalAdminDbContext>(app);
 
 app.MapControllers();
 

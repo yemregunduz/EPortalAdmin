@@ -4,5 +4,6 @@
     {
         public static readonly string AppSettingsKey = "CacheSettings";
         public int SlidingExpiration { get; set; }
+        public static CacheSettings Default => new() { SlidingExpiration = 1 };
     }
 }

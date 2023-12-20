@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-using EPortalAdmin.Core.Utilities.Extensions;
 
 namespace EPortalAdmin.Core.Utilities.Extensions.Claims
 {

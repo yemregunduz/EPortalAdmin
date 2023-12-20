@@ -1,4 +1,6 @@
-﻿namespace EPortalAdmin.Core.Domain.Entities
+﻿using EPortalAdmin.Core.Domain.Enums;
+
+namespace EPortalAdmin.Core.Domain.Entities
 {
     public class User : BaseEntity
     {
@@ -8,7 +10,7 @@
         public byte[] PasswordSalt { get; set; }
         public byte[] PasswordHash { get; set; }
         public bool Status { get; set; }
-
+        public AuthenticatorType AuthenticatorType { get; set; }
         public virtual ICollection<UserOperationClaim> UserOperationClaims { get; set; }
         public virtual ICollection<RefreshToken> RefreshTokens { get; set; }
 
@@ -19,7 +21,7 @@
         }
 
         public User(int id, string firstName, string lastName, string email, byte[] passwordSalt, byte[] passwordHash,
-                    bool status) : this()
+                    bool status, AuthenticatorType authenticatorType) : this()
         {
             Id = id;
             FirstName = firstName;
@@ -28,6 +30,7 @@
             PasswordSalt = passwordSalt;
             PasswordHash = passwordHash;
             Status = status;
+            AuthenticatorType = authenticatorType;
         }
     }
 }

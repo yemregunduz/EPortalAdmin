@@ -1,7 +1,7 @@
-﻿using MediatR;
+﻿using EPortalAdmin.Core.Logging.Serilog;
+using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using System.Text;
 using System.Text.Json;
 
@@ -13,14 +13,14 @@ public class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
     private readonly IDistributedCache _cache;
 
     private readonly CacheSettings _cacheSettings;
-    private readonly ILogger<CachingBehavior<TRequest, TResponse>> _logger;
+    private readonly LoggerServiceBase _loggerService;
 
-    public CachingBehavior(IDistributedCache cache, ILogger<CachingBehavior<TRequest, TResponse>> logger, IConfiguration configuration)
+    public CachingBehavior(IDistributedCache cache, LoggerServiceBase loggerService, IConfiguration configuration)
     {
         _cache = cache;
-        _logger = logger;
-        _cacheSettings = configuration.GetSection("CacheSettings").Get<CacheSettings>()
-            ?? throw new InvalidOperationException();
+        _loggerService = loggerService;
+        _cacheSettings = configuration.GetSection(CacheSettings.AppSettingsKey).Get<CacheSettings>()
+            ?? CacheSettings.Default;
     }
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
@@ -33,7 +33,7 @@ public class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
         if (cachedResponse != null)
         {
             response = JsonSerializer.Deserialize<TResponse>(Encoding.Default.GetString(cachedResponse))!;
-            _logger.LogInformation($"Fetched from Cache -> {request.CacheKey}");
+            _loggerService.Info($"Fetched from Cache -> {request.CacheKey}");
         }
         else
         {
@@ -56,7 +56,7 @@ public class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
 
         byte[] serializeData = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(response));
         await _cache.SetAsync(request.CacheKey, serializeData, cacheOptions, cancellationToken);
-        _logger.LogInformation($"Added to Cache -> {request.CacheKey}");
+        _loggerService.Info($"Added to Cache -> {request.CacheKey}");
 
         if (request.CacheGroupKey != null)
             await AddCacheKeyToGroup(request, slidingExpiration, cancellationToken);
@@ -93,7 +93,7 @@ public class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
             new() { SlidingExpiration = TimeSpan.FromSeconds(Convert.ToDouble(cacheGroupCacheSlidingExpirationValue)) };
 
         await _cache.SetAsync(key: request.CacheGroupKey!, newCacheGroupCache, cacheOptions, cancellationToken);
-        _logger.LogInformation($"Added to Cache -> {request.CacheGroupKey}");
+        _loggerService.Info($"Added to Cache -> {request.CacheGroupKey}");
 
         await _cache.SetAsync(
             key: $"{request.CacheGroupKey}SlidingExpiration",
@@ -101,6 +101,5 @@ public class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
             cacheOptions,
             cancellationToken
         );
-        _logger.LogInformation($"Added to Cache -> {request.CacheGroupKey}SlidingExpiration");
     }
 }

@@ -1,11 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-
-namespace EPortalAdmin.Core.Exceptions
+﻿namespace EPortalAdmin.Core.Exceptions
 {
-    public class AuthorizationProblemDetails : ProblemDetails
+    public class AuthorizationProblemDetails : CustomProblemDetails
     {
-        public override string ToString() => JsonConvert.SerializeObject(this);
     }
 }
 

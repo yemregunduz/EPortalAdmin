@@ -1,6 +1,6 @@
-﻿using System.Security.Cryptography;
+﻿using EPortalAdmin.Core.Utilities.Options;
+using System.Security.Cryptography;
 using System.Text;
-using EPortalAdmin.Core.Utilities.Options;
 
 namespace EPortalAdmin.Core.Utilities.Helpers
 {

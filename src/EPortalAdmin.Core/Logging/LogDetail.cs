@@ -3,6 +3,8 @@
     public class LogDetail
     {
         public int? UserId { get; set; }
+        public Guid CorrelationId { get; set; }
+        public int EndpointId { get; set; }
         public string Controller { get; set; }
         public string Action { get; set; }
         public string QueryString { get; set; }

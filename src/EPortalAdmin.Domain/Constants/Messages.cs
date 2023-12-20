@@ -34,6 +34,20 @@
             public static readonly string GetUserSuccessfully = "Kullanıcı başarıyla getirildi.";
             public static readonly string UserNotFound = "Kullanıcı bulunamadı.";
         }
+        public static class Endpoint
+        {
+            public static readonly string EndpointListedSuccessfully = "Uygulamaya ait endpointler başarıyla listelendi.";
+            public static readonly string EndpointNotFound = "Endpoint bulunamadı.";
+            public static readonly string GetEndpointSuccessfully = "Endpoint başarıyla getirildi.";
+        }
+        public static class EndpointOperationClaim
+        {
+            public static readonly string EndpointOperationClaimNotFound = "Kullanıcıya ait operasyon yetkisi bulunamadı";
+            public static readonly string EndpointOperationClaimAlreadyExist = "Endpoint için seçtiğiniz operasyon yetkisi zaten tanımlı!";
+            public static readonly string EndpointDoesNotExist = "Seçtiğiniz endpoint bulunamadı!";
+            public static readonly string EndpointOperationClaimCreated = "Endpoint için seçtiğiniz operasyon yetkisi başarıyla tanımlandı.";
+            public static readonly string EndpointUpdated = "Endpoint güncellendi.";
+        }
         public static class OperationClaim
         {
             public static readonly string OperationClaimGetSuccessfully = "Operasyon yetkisi başarıyla getirildi.";
@@ -56,30 +70,6 @@
             public static readonly string UserOperationClaimCreated = "Operasyon yetkisi kullanıcıya eklendi.";
             public static readonly string UserAlreadyHasOperationClaim = "Kullanıcıda bu operasyon yetkisi zaten tanımlı!";
 
-        }
-
-        public static class Blog
-        {
-            public static readonly string GetBlogSuccessfully = "Blog detayları getirildi.";
-            public static readonly string BlogsListed = "Bloglar listelendi";
-            public static readonly string BlogDeleted = "Blog yazısı silindi.";
-            public static readonly string BlogStatusConflict = "Blo  g statüsü güncellenmek istenen değere eşit!";
-            public static readonly string BlogStatusUpdated = "Blog yazısının durumu güncellendi";
-            public static readonly string BlogUpdated = "Blog yazısı güncellendi.";
-            public static readonly string BlogNotFound = "Blog yazısı bulunamadı.";
-            public static readonly string BlogCreated = "Blog yazısı oluşturuldu.";
-        }
-
-        public static class BlogImageFile
-        {
-            public static readonly string ShowcaseBlogImageNotFound = "Blog için öne çıkarılmış resim bulunamadı!";
-            public static readonly string GetBlogImageSuccessfully = "Blog resimleri detayları getirildi.";
-            public static readonly string BlogImagesListed = "Blog resimleri listelendi";
-            public static readonly string BlogImageDeleted = "Blog resimleri silindi.";
-            public static readonly string BlogImageUpdated = "Blog resmi güncellendi.";
-            public static readonly string BlogImageNotFound = "Blog resmi bulunamadı.";
-            public static readonly string BlogImageCreated = "Blog resmi oluşturuldu.";
-            public static readonly string InvalidFileExtension = "Geçersiz resim dosyası uzantısı!";
         }
 
         public static class Category

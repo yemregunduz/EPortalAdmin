@@ -1,7 +1,6 @@
 ﻿using EPortalAdmin.Core.Logging.Serilog.ConfigurationModels;
 using Microsoft.Extensions.Configuration;
 using Serilog;
-using Serilog.Context;
 
 namespace EPortalAdmin.Core.Logging.Serilog.Logger
 {

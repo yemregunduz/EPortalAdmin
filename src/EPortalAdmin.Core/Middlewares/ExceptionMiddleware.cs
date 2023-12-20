@@ -1,24 +1,37 @@
-﻿using FluentValidation;
+﻿using EPortalAdmin.Core.Exceptions;
+using EPortalAdmin.Core.Logging;
+using EPortalAdmin.Core.Logging.Serilog;
+using EPortalAdmin.Core.Utilities.Helpers;
+using FluentValidation;
 using Microsoft.AspNetCore.Http;
-using EPortalAdmin.Core.Exceptions;
+using Newtonsoft.Json;
 using System.Net;
 
 namespace EPortalAdmin.Core.Middlewares
 {
-    public class ExceptionMiddleware
+    public class ExceptionMiddleware : IMiddleware
     {
-        private readonly RequestDelegate _next;
+        private readonly Dictionary<Type, Func<HttpContext, Exception, CustomProblemDetails>> exceptionHandlers;
+        private readonly LoggerServiceBase _loggerService;
 
-        public ExceptionMiddleware(RequestDelegate next)
+        public ExceptionMiddleware(LoggerServiceBase loggerService)
         {
-            _next = next;
+            exceptionHandlers = new Dictionary<Type, Func<HttpContext, Exception, CustomProblemDetails>>
+            {
+                { typeof(ValidationException), CreateValidationException },
+                { typeof(BusinessException), CreateBusinessException },
+                { typeof(NotFoundException), CreateNotFoundException },
+                { typeof(AuthorizationException), CreateAuthorizationException }
+            };
+
+            _loggerService = loggerService;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             try
             {
-                await _next(context);
+                await next(context);
             }
             catch (Exception exception)
             {
@@ -30,89 +43,76 @@ namespace EPortalAdmin.Core.Middlewares
         {
             context.Response.ContentType = "application/json";
 
-            if (exception.GetType() == typeof(ValidationException))
-                return CreateValidationException(context, exception);
-            if (exception.GetType() == typeof(BusinessException))
-                return CreateBusinessException(context, exception);
-            if (exception.GetType() == typeof(NotFoundException))
-                return CreateNotFoundException(context, exception);
-            if (exception.GetType() == typeof(AuthorizationException))
-                return CreateAuthorizationException(context, exception);
-            return CreateInternalException(context, exception);
+            if (exceptionHandlers.TryGetValue(exception.GetType(), out var handler))
+            {
+                var problemDetails = handler(context, exception);
+                return context.Response.WriteAsync(problemDetails.ToString());
+            }
+
+            var internalDetails = CreateInternalException(context, exception);
+            return context.Response.WriteAsync(internalDetails.ToString());
         }
 
-        private Task CreateAuthorizationException(HttpContext context, Exception exception)
+        private CustomProblemDetails CreateAuthorizationException(HttpContext context, Exception exception)
         {
-            context.Response.StatusCode = Convert.ToInt32(HttpStatusCode.Unauthorized);
-
-            return context.Response.WriteAsync(new AuthorizationProblemDetails
-            {
-                Status = StatusCodes.Status401Unauthorized,
-                Type = "https://example.com/probs/authorization",
-                Title = "Authorization exception",
-                Detail = exception.Message,
-                Instance = context.Request.Path
-            }.ToString());
+            return CreateProblemDetails(context, exception, HttpStatusCode.Unauthorized, "https://example.com/probs/authorization", "Authorization exception");
         }
 
-        private Task CreateBusinessException(HttpContext context, Exception exception)
+        private CustomProblemDetails CreateBusinessException(HttpContext context, Exception exception)
         {
-            context.Response.StatusCode = Convert.ToInt32(HttpStatusCode.BadRequest);
-
-            return context.Response.WriteAsync(new BusinessProblemDetails
-            {
-                Status = StatusCodes.Status400BadRequest,
-                Type = "https://example.com/probs/business",
-                Title = "Business exception",
-                Detail = exception.Message,
-                Instance = context.Request.Path
-            }.ToString());
+            return CreateProblemDetails(context, exception, HttpStatusCode.BadRequest, "https://example.com/probs/business", "Business exception");
         }
 
-        private Task CreateValidationException(HttpContext context, Exception exception)
+        private CustomProblemDetails CreateValidationException(HttpContext context, Exception exception)
         {
-            context.Response.StatusCode = Convert.ToInt32(HttpStatusCode.BadRequest);
-            object errors = ((ValidationException)exception).Errors.Select(e => new { e.PropertyName, e.ErrorMessage, e.AttemptedValue });
-
-            return context.Response.WriteAsync(new ValidationProblemDetails
-            {
-                Status = StatusCodes.Status400BadRequest,
-                Type = "https://example.com/probs/validation",
-                Title = "Validation error(s)",
-                Detail = "",
-                Instance = context.Request.Path,
-                Errors = errors
-            }.ToString());
+            var validationException = (ValidationException)exception;
+            var errors = validationException.Errors.Select(e => new { e.PropertyName, e.ErrorMessage, e.AttemptedValue });
+            return CreateProblemDetails(context, exception, HttpStatusCode.BadRequest, "https://example.com/probs/validation", "Validation error(s)", errors);
         }
 
-        private Task CreateNotFoundException(HttpContext context, Exception exception)
+        private CustomProblemDetails CreateNotFoundException(HttpContext context, Exception exception)
         {
-            context.Response.StatusCode = Convert.ToInt32(HttpStatusCode.NotFound);
+            return CreateProblemDetails(context, exception, HttpStatusCode.NotFound, "https://example.com/probs/not-found", "Not Found Exception");
+        }
 
-            return context.Response.WriteAsync(new NotFoundProblemDetails
+        private CustomProblemDetails CreateInternalException(HttpContext context, Exception exception)
+        {
+            return CreateProblemDetails(context, exception, HttpStatusCode.InternalServerError, "https://example.com/probs/internal", "Internal exception", innerExceptionDetail: exception.InnerException?.Message ?? "");
+        }
+
+        private CustomProblemDetails CreateProblemDetails(HttpContext context, Exception exception, HttpStatusCode statusCode, string type, string title, object errors = null, string innerExceptionDetail = null)
+        {
+            context.Response.StatusCode = Convert.ToInt32(statusCode);
+
+            var problemDetails = new CustomProblemDetails
             {
-                Status = StatusCodes.Status404NotFound,
-                Type = "https://example.com/probs/not-found",
-                Title = "Not Found Exception",
+                Status = (int)statusCode,
+                Type = type,
+                Title = title,
                 Detail = exception.Message,
                 Instance = context.Request.Path,
-            }.ToString());
+            };
+
+            if (errors != null)
+            {
+                problemDetails.Extensions["ValidationErrors"] = errors;
+            }
+
+            if (!string.IsNullOrEmpty(innerExceptionDetail))
+            {
+                problemDetails.Extensions["InnerExceptionDetail"] = innerExceptionDetail;
+            }
+
+            CreateExceptionLog(context, exception, problemDetails);
+
+            return problemDetails;
         }
 
-        private Task CreateInternalException(HttpContext context, Exception exception)
+        private void CreateExceptionLog(HttpContext context, Exception exception, CustomProblemDetails problemDetails)
         {
-            context.Response.StatusCode = Convert.ToInt32(HttpStatusCode.InternalServerError);
-
-            return context.Response.WriteAsync(new InternalProblemDetails
-            {
-                Status = StatusCodes.Status500InternalServerError,
-                Type = "https://example.com/probs/internal",
-                Title = "Internal exception",
-                Detail = exception.Message,
-                InnerExceptionDetail = exception.InnerException?.Message ?? "",
-                Instance = context.Request.Path
-            }.ToString());
+            ExceptionLog exceptionLog = LoggingHelper.GetExceptionLog(context, exception, problemDetails);
+            SerilogHelpers.PushExceptionLogProperty(exceptionLog);
+            _loggerService.Error(JsonConvert.SerializeObject(problemDetails));
         }
     }
 }
-
