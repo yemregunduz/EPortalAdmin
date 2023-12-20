@@ -10,14 +10,14 @@ namespace EPortalAdmin.Core.Utilities.Helpers
 {
     public static class LoggingHelper
     {
-        public static LogDetail GetLogDetail(HttpContext context, string requestBody,
+        public static ServiceLog GetServiceLog(HttpContext context, string requestBody,
             string responseBody, long elapsedResponseTimeInMilliseconds)
-            => BuildLogDetail<LogDetail>(context, requestBody, responseBody, elapsedResponseTimeInMilliseconds);
+            => BuildServiceLog<ServiceLog>(context, requestBody, responseBody, elapsedResponseTimeInMilliseconds);
 
         public static ExceptionLog GetExceptionLog(HttpContext context, Exception exception, CustomProblemDetails problemDetails)
             => BuildExceptionLog<ExceptionLog>(context, exception, problemDetails);
 
-        public static string GetLogMessage(HttpContext context, string requestBody, string responseBody,
+        public static string GetServiceLogMessage(HttpContext context, string requestBody, string responseBody,
             long elapsedResponseTimeInMilliseconds)
         {
             var logMessage = new StringBuilder();
@@ -39,12 +39,12 @@ namespace EPortalAdmin.Core.Utilities.Helpers
             return logMessage.ToString();
         }
 
-        private static T BuildLogDetail<T>(HttpContext context, string requestBody,
-            string responseBody, long elapsedResponseTimeInMilliseconds) where T : LogDetail, new()
+        private static T BuildServiceLog<T>(HttpContext context, string requestBody,
+            string responseBody, long elapsedResponseTimeInMilliseconds) where T : ServiceLog, new()
         {
             CurrentUser? currentUser = context.RequestServices.GetRequiredService<CurrentUser>();
 
-            var logDetail = new T
+            var serviceLog = new T
             {
                 Action = context.GetCurrentAction(),
                 Controller = context.GetCurrentController(),
@@ -63,7 +63,7 @@ namespace EPortalAdmin.Core.Utilities.Helpers
                 EndpointId = EndpointHelper.GetId(context.GetCurrentController(), context.GetCurrentAction())
             };
 
-            return logDetail;
+            return serviceLog;
         }
 
         private static T BuildExceptionLog<T>(HttpContext context, Exception exception, CustomProblemDetails problemDetails) where T : ExceptionLog, new()

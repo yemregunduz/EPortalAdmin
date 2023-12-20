@@ -11,23 +11,23 @@ namespace EPortalAdmin.Core.Utilities.Helpers
 
         public static ColumnOptions GetExceptionLogTableColumnOptions() => GetColumnOptions(GetAdditionalDataColumnsForExceptionLogTable());
 
-        public static void PushLogDetailProperty(LogDetail logDetail)
+        public static void PushServiceLogProperty(ServiceLog serviceLog)
         {
-            LogContext.PushProperty("Action", logDetail.Action);
-            LogContext.PushProperty("Controller", logDetail.Controller);
-            LogContext.PushProperty("IpAddress", logDetail.IpAddress);
-            LogContext.PushProperty("HttpMethod", logDetail.HttpMethod);
-            LogContext.PushProperty("ResponseHttpStatusCode", logDetail.ResponseHttpStatusCode);
-            LogContext.PushProperty("QueryString", logDetail.QueryString);
-            LogContext.PushProperty("BrowserName", logDetail.BrowserName);
-            LogContext.PushProperty("HttpHeaders", logDetail.HttpHeaders);
-            LogContext.PushProperty("RouteValuesJson", logDetail.RouteValuesJson);
-            LogContext.PushProperty("UserId", logDetail.UserId);
-            LogContext.PushProperty("RequestBody", logDetail.RequestBody);
-            LogContext.PushProperty("ResponseBody", logDetail.ResponseBody);
-            LogContext.PushProperty("ResponseTimeInMilliseconds", logDetail.ResponseTimeInMilliseconds);
-            LogContext.PushProperty("CorrelationId", logDetail.CorrelationId);
-            LogContext.PushProperty("EndpointId", logDetail.EndpointId);
+            LogContext.PushProperty("Action", serviceLog.Action);
+            LogContext.PushProperty("Controller", serviceLog.Controller);
+            LogContext.PushProperty("IpAddress", serviceLog.IpAddress);
+            LogContext.PushProperty("HttpMethod", serviceLog.HttpMethod);
+            LogContext.PushProperty("ResponseHttpStatusCode", serviceLog.ResponseHttpStatusCode);
+            LogContext.PushProperty("QueryString", serviceLog.QueryString);
+            LogContext.PushProperty("BrowserName", serviceLog.BrowserName);
+            LogContext.PushProperty("HttpHeaders", serviceLog.HttpHeaders);
+            LogContext.PushProperty("RouteValuesJson", serviceLog.RouteValuesJson);
+            LogContext.PushProperty("UserId", serviceLog.UserId);
+            LogContext.PushProperty("RequestBody", serviceLog.RequestBody);
+            LogContext.PushProperty("ResponseBody", serviceLog.ResponseBody);
+            LogContext.PushProperty("ResponseTimeInMilliseconds", serviceLog.ResponseTimeInMilliseconds);
+            LogContext.PushProperty("CorrelationId", serviceLog.CorrelationId);
+            LogContext.PushProperty("EndpointId", serviceLog.EndpointId);
         }
 
         public static void PushExceptionLogProperty(ExceptionLog exceptionLog)

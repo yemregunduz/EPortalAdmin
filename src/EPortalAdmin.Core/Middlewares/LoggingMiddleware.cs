@@ -52,10 +52,10 @@ namespace EPortalAdmin.Core.Middlewares
         }
         private void CreateServiceLog(string requestBody, string responseBody, long elapsedResponseTimeInMilliseconds)
         {
-            LogDetail logDetail = LoggingHelper.GetLogDetail(_context, requestBody, responseBody, elapsedResponseTimeInMilliseconds);
-            SerilogHelpers.PushLogDetailProperty(logDetail);
+            ServiceLog serviceLog = LoggingHelper.GetServiceLog(_context, requestBody, responseBody, elapsedResponseTimeInMilliseconds);
+            SerilogHelpers.PushServiceLogProperty(serviceLog);
 
-            loggerService.Info(JsonConvert.SerializeObject(logDetail));
+            loggerService.Info(JsonConvert.SerializeObject(serviceLog));
         }
     }
 }

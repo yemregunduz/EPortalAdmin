@@ -1,6 +1,6 @@
 ﻿namespace EPortalAdmin.Core.Logging
 {
-    public class LogDetail
+    public class ServiceLog
     {
         public int? UserId { get; set; }
         public Guid CorrelationId { get; set; }

@@ -11,6 +11,5 @@
         public string ValidationErrors { get; set; }
         public string Instance { get; set; }
         public string Type { get; set; }
-
     }
 }
