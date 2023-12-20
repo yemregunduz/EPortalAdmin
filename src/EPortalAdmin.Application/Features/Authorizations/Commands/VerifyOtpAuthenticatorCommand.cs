@@ -25,34 +25,24 @@ namespace EPortalAdmin.Application.Features.Authorizations.Commands
             ActivationCode = activationCode;
         }
 
-        public class VerifyOtpAuthenticatorCommandHandler : ApplicationFeatureBase<OtpAuthenticator>, IRequestHandler<VerifyOtpAuthenticatorCommand, Result>
+        public class VerifyOtpAuthenticatorCommandHandler(AuthorizationBusinessRules authBusinessRules,
+            IAuthenticatorService authenticatorService, IUserRepository userRepository) : ApplicationFeatureBase<OtpAuthenticator>, IRequestHandler<VerifyOtpAuthenticatorCommand, Result>
         {
-            private readonly AuthorizationBusinessRules _authBusinessRules;
-            private readonly IAuthenticatorService _authenticatorService;
-            private readonly IUserRepository _userRepository;
-            public VerifyOtpAuthenticatorCommandHandler(AuthorizationBusinessRules authBusinessRules,
-                IAuthenticatorService authenticatorService, IUserRepository userRepository)
-            {
-                _authBusinessRules = authBusinessRules;
-                _authenticatorService = authenticatorService;
-                _userRepository = userRepository;
-            }
-
             public async Task<Result> Handle(VerifyOtpAuthenticatorCommand request, CancellationToken cancellationToken)
             {
                 OtpAuthenticator? otpAuthenticator = await Repository.GetAsync(predicate: e => e.UserId == CurrentUserId, cancellationToken: cancellationToken)
                     ?? throw new NotFoundException(Messages.Authorization.OtpAuthenticatorNotFound);
 
-                User? user = await _userRepository.GetAsync(predicate: u => u.Id == CurrentUserId, cancellationToken: cancellationToken)
+                User? user = await userRepository.GetAsync(predicate: u => u.Id == CurrentUserId, cancellationToken: cancellationToken)
                     ?? throw new NotFoundException(Messages.Authorization.UserNotFound);
 
                 otpAuthenticator!.IsVerified = true;
                 user!.AuthenticatorType = AuthenticatorType.Otp;
 
-                await _authenticatorService.VerifyAuthenticatorCode(user, request.ActivationCode);
+                await authenticatorService.VerifyAuthenticatorCode(user, request.ActivationCode);
 
                 await Repository.UpdateAsync(otpAuthenticator);
-                await _userRepository.UpdateAsync(user);
+                await userRepository.UpdateAsync(user);
 
                 return new SuccessResult(Messages.Authorization.OtpVerified);
             }

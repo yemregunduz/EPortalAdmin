@@ -13,17 +13,12 @@ namespace EPortalAdmin.Application.Features.OperationClaims.Commands
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public class UpdateOperationClaimCommandHandler : ApplicationFeatureBase<OperationClaim>, IRequestHandler<UpdateOperationClaimCommand, DataResult<OperationClaimDto>>
+        public class UpdateOperationClaimCommandHandler(OperationClaimBusinessRules businessRules) : ApplicationFeatureBase<OperationClaim>, 
+            IRequestHandler<UpdateOperationClaimCommand, DataResult<OperationClaimDto>>
         {
-            private readonly OperationClaimBusinessRules _businessRules;
-            public UpdateOperationClaimCommandHandler(OperationClaimBusinessRules businessRules)
-            {
-                _businessRules = businessRules;
-            }
-
             public async Task<DataResult<OperationClaimDto>> Handle(UpdateOperationClaimCommand request, CancellationToken cancellationToken)
             {
-                await _businessRules.OperationClaimNameCanNotBeDuplicated(request.Name);
+                await businessRules.OperationClaimNameCanNotBeDuplicated(request.Name);
 
                 OperationClaim? operationClaim = await Repository.GetAsync(o => o.Id == request.Id, cancellationToken: cancellationToken)
                     ?? throw new NotFoundException(Messages.OperationClaim.OperationClaimNotFound);

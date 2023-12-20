@@ -14,25 +14,17 @@ namespace EPortalAdmin.Application.Features.Authorizations.Commands
         public string Token { get; set; }
         public string IpAddress { get; set; }
 
-        public class RevokeRefreshTokenCommandHandler : ApplicationFeatureBase<RefreshToken>, IRequestHandler<RevokeRefreshTokenCommand, DataResult<RevokedTokenDto>>
+        public class RevokeRefreshTokenCommandHandler(IAuthService authService, AuthorizationBusinessRules authorizationBusinessRules) : 
+            ApplicationFeatureBase<RefreshToken>, IRequestHandler<RevokeRefreshTokenCommand, DataResult<RevokedTokenDto>>
         {
-            private readonly IAuthService _authService;
-            private readonly AuthorizationBusinessRules _authorizationBusinessRules;
-
-            public RevokeRefreshTokenCommandHandler(IAuthService authService, AuthorizationBusinessRules authorizationBusinessRules)
-            {
-                _authService = authService;
-                _authorizationBusinessRules = authorizationBusinessRules;
-            }
-
             public async Task<DataResult<RevokedTokenDto>> Handle(RevokeRefreshTokenCommand request, CancellationToken cancellationToken)
             {
-                RefreshToken? refreshToken = await _authService.GetRefreshTokenByToken(request.Token)
+                RefreshToken? refreshToken = await authService.GetRefreshTokenByToken(request.Token)
                     ?? throw new NotFoundException(Messages.Authorization.RefreshTokenNotFound);
 
-                await _authorizationBusinessRules.RefreshTokenShouldBeActive(refreshToken!);
+                await authorizationBusinessRules.RefreshTokenShouldBeActive(refreshToken!);
 
-                await _authService.RevokeRefreshToken(token: refreshToken!, request.IpAddress, reason: "Revoked without replacement");
+                await authService.RevokeRefreshToken(token: refreshToken!, request.IpAddress, reason: "Revoked without replacement");
 
                 RevokedTokenDto refreshTokenDto = Mapper.Map<RevokedTokenDto>(refreshToken);
                 return new SuccessDataResult<RevokedTokenDto>(refreshTokenDto, Messages.Authorization.RefreshTokenRevokedSuccessfully);

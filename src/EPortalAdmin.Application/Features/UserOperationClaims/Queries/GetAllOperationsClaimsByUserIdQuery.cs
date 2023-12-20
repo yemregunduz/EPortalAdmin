@@ -13,8 +13,8 @@ namespace EPortalAdmin.Application.Features.UserOperationClaims.Queries
     {
         public int UserId { get; set; }
 
-        public class GetAllOperationsClaimsByUserIdQueryHandler
-            : ApplicationFeatureBase<UserOperationClaim>, IRequestHandler<GetAllOperationsClaimsByUserIdQuery, DataResult<IList<UserOperationClaimDto>>>
+        public class GetAllOperationsClaimsByUserIdQueryHandler : ApplicationFeatureBase<UserOperationClaim>, 
+            IRequestHandler<GetAllOperationsClaimsByUserIdQuery, DataResult<IList<UserOperationClaimDto>>>
         {
             private readonly UserOperationClaimBusinessRules _businessRules;
 

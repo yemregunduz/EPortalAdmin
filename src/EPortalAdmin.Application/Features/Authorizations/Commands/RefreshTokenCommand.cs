@@ -15,16 +15,11 @@ namespace EPortalAdmin.Application.Features.Authorizations.Commands
         public string RefreshToken { get; set; }
         public string IpAddress { get; set; }
 
-        public class RefreshTokenCommandHandler : ApplicationFeatureBase<User>, IRequestHandler<RefreshTokenCommand, DataResult<RefreshedTokenDto>>
+        public class RefreshTokenCommandHandler(IAuthService authService, AuthorizationBusinessRules authorizationBusinessRules) 
+            : ApplicationFeatureBase<User>, IRequestHandler<RefreshTokenCommand, DataResult<RefreshedTokenDto>>
         {
-            private readonly IAuthService _authService;
-            private readonly AuthorizationBusinessRules _authorizationBusinessRules;
-
-            public RefreshTokenCommandHandler(IAuthService authService, AuthorizationBusinessRules authorizationBusinessRules)
-            {
-                _authService = authService;
-                _authorizationBusinessRules = authorizationBusinessRules;
-            }
+            private readonly IAuthService _authService = authService;
+            private readonly AuthorizationBusinessRules _authorizationBusinessRules = authorizationBusinessRules;
 
             public async Task<DataResult<RefreshedTokenDto>> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
             {

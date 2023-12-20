@@ -11,20 +11,15 @@ namespace EPortalAdmin.Application.Features.Authorizations.Commands
     {
         public string ActivationKey { get; set; }
 
-        public class VerifyEmailAuthenticatorCommandHandler : ApplicationFeatureBase<EmailAuthenticator>, IRequestHandler<VerifyEmailAuthenticatorCommand, Result>
+        public class VerifyEmailAuthenticatorCommandHandler(AuthorizationBusinessRules authorizationBusinessRules) 
+            : ApplicationFeatureBase<EmailAuthenticator>, IRequestHandler<VerifyEmailAuthenticatorCommand, Result>
         {
-            private readonly AuthorizationBusinessRules _authorizationBusinessRules;
-            public VerifyEmailAuthenticatorCommandHandler(AuthorizationBusinessRules authorizationBusinessRules)
-            {
-                _authorizationBusinessRules = authorizationBusinessRules;
-            }
-
             public async Task<Result> Handle(VerifyEmailAuthenticatorCommand request, CancellationToken cancellationToken)
             {
                 EmailAuthenticator? emailAuthenticator = await Repository.GetAsync(
                     predicate: e => e.ActivationKey == request.ActivationKey, cancellationToken: cancellationToken)
                     ?? throw new NotFoundException(Messages.Authorization.EmailAuthenticatorNotFound);
-                await _authorizationBusinessRules.EmailAuthenticatorActivationKeyShouldBeExists(emailAuthenticator!);
+                await authorizationBusinessRules.EmailAuthenticatorActivationKeyShouldBeExists(emailAuthenticator!);
 
                 emailAuthenticator!.ActivationKey = null;
                 emailAuthenticator.IsVerified = true;

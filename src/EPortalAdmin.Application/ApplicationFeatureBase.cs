@@ -12,15 +12,15 @@ namespace EPortalAdmin.Application
           where TEntity : BaseEntity
     {
         protected IMapper Mapper =>
-            _mapper ??= HttpContextAccessorSingleton.Current.HttpContext.RequestServices.GetRequiredService<IMapper>();
+            _mapper ??= HttpContextAccessorSingleton.Current.HttpContext!.RequestServices.GetRequiredService<IMapper>();
         private IMapper? _mapper;
 
         protected IRepository<TEntity> Repository =>
-            _repository ??= HttpContextAccessorSingleton.Current.HttpContext.RequestServices.GetRequiredService<IRepository<TEntity>>();
+            _repository ??= HttpContextAccessorSingleton.Current.HttpContext!.RequestServices.GetRequiredService<IRepository<TEntity>>();
 
         private IRepository<TEntity>? _repository;
 
-        protected int CurrentUserId => HttpContextAccessorSingleton.Current.HttpContext.User.GetUserId();
+        protected int CurrentUserId => HttpContextAccessorSingleton.Current.HttpContext!.User.GetUserId();
 
     }
 

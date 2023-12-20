@@ -1,8 +1,8 @@
-﻿using EPortalAdmin.Application.Features.EndpointOperationClaims.Commands;
-using EPortalAdmin.Application.Features.Endpoints.Rules;
+﻿using EPortalAdmin.Application.Features.Endpoints.Rules;
 using EPortalAdmin.Application.Features.OperationClaims.Rules;
 using EPortalAdmin.Application.Repositories;
 using EPortalAdmin.Core.Domain.Entities;
+using EPortalAdmin.Core.Domain.Enums;
 using EPortalAdmin.Core.Exceptions;
 using EPortalAdmin.Domain.Constants;
 
@@ -22,7 +22,7 @@ namespace EPortalAdmin.Application.Features.EndpointOperationClaims.Rules
                 await endpointOperationClaimRepository.GetAsync(c => c.EndpointId == endpointId && c.OperationClaimId == operationClaimId, enableTracking: false);
 
             if (EndpointOperationClaim is not null)
-                throw new BusinessException(Messages.EndpointOperationClaim.EndpointOperationClaimAlreadyExist);
+                throw new BusinessException(Messages.EndpointOperationClaim.EndpointOperationClaimAlreadyExist,ExceptionCode.EndpoindAlreadyHasOperationClaim);
         }
 
         public async Task CheckIfExploreEndpointExist(int EndpointId)

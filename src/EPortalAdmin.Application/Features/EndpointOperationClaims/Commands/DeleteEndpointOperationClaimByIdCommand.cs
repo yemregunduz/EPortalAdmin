@@ -15,7 +15,7 @@ namespace EPortalAdmin.Application.Features.EndpointOperationClaims.Commands
         {
             public async Task<DataResult<EndpointOperationClaimDto>> Handle(DeleteEndpointOperationClaimByIdCommand request, CancellationToken cancellationToken)
             {
-                EndpointOperationClaim deletedEndpointOperationClaim = await Repository.DeleteByIdAsync(request.Id);
+                EndpointOperationClaim deletedEndpointOperationClaim = await Repository.DeleteByIdAsync(request.Id,cancellationToken);
                 EndpointOperationClaimDto endpointOperationClaimDto = Mapper.Map<EndpointOperationClaimDto>(deletedEndpointOperationClaim);
 
                 return new SuccessDataResult<EndpointOperationClaimDto>(endpointOperationClaimDto,

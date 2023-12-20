@@ -12,18 +12,12 @@ namespace EPortalAdmin.Application.Features.OperationClaims.Commands
         public string Name { get; set; }
 
 
-        public class CreateOperationClaimCommandHandler : ApplicationFeatureBase<OperationClaim>, IRequestHandler<CreateOperationClaimCommand, DataResult<OperationClaimDto>>
+        public class CreateOperationClaimCommandHandler(OperationClaimBusinessRules operationClaimRules) 
+            : ApplicationFeatureBase<OperationClaim>, IRequestHandler<CreateOperationClaimCommand, DataResult<OperationClaimDto>>
         {
-            private readonly OperationClaimBusinessRules _operationClaimRules;
-
-            public CreateOperationClaimCommandHandler(OperationClaimBusinessRules operationClaimRules)
-            {
-                _operationClaimRules = operationClaimRules;
-            }
-
             public async Task<DataResult<OperationClaimDto>> Handle(CreateOperationClaimCommand request, CancellationToken cancellationToken)
             {
-                await _operationClaimRules.OperationClaimNameCanNotBeDuplicated(request.Name);
+                await operationClaimRules.OperationClaimNameCanNotBeDuplicated(request.Name);
 
                 OperationClaim operationClaim = Mapper.Map<OperationClaim>(request);
                 OperationClaim createdOperationClaim = await Repository.AddAsync(operationClaim);

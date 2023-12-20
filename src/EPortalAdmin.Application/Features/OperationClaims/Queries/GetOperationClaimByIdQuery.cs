@@ -15,7 +15,7 @@ namespace EPortalAdmin.Application.Features.OperationClaims.Queries
         {
             public async Task<DataResult<OperationClaimDto>> Handle(GetOperationClaimByIdQuery request, CancellationToken cancellationToken)
             {
-                OperationClaim? operationClaim = await Repository.GetAsync(o => o.Id == request.Id)
+                OperationClaim? operationClaim = await Repository.GetAsync(o => o.Id == request.Id, cancellationToken:cancellationToken)
                     ?? throw new NotFoundException(Messages.OperationClaim.OperationClaimNotFound);
 
                 OperationClaimDto mappedOperationClaim = Mapper.Map<OperationClaimDto>(operationClaim);

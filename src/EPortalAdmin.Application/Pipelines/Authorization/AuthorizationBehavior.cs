@@ -7,23 +7,16 @@ using Microsoft.AspNetCore.Http;
 
 namespace EPortalAdmin.Application.Pipelines.Authorization
 {
-    public class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public class AuthorizationBehavior<TRequest, TResponse>(IHttpContextAccessor httpContextAccessor) : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>, ISecuredRequest
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public AuthorizationBehavior(IHttpContextAccessor httpContextAccessor)
-        {
-            _httpContextAccessor = httpContextAccessor;
-        }
-
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
-            List<string>? roleClaims = _httpContextAccessor.HttpContext.User.ClaimRoles() ??
+            List<string>? roleClaims = httpContextAccessor.HttpContext.User.ClaimRoles() ??
                 throw new AuthorizationException(Messages.Authorization.ClaimsNotFound);
 
-            var controllerName = _httpContextAccessor.HttpContext.GetCurrentController();
-            var actionName = _httpContextAccessor.HttpContext.GetCurrentAction();
+            var controllerName = httpContextAccessor.HttpContext.GetCurrentController();
+            var actionName = httpContextAccessor.HttpContext.GetCurrentAction();
 
 
             //bool isAuthorized =

@@ -9,7 +9,8 @@ namespace EPortalAdmin.Application.Features.UserOperationClaims.Commands
     public class BulkDeleteUserOperationClaimsByOperationClaimIdCommand : IRequest<Result>
     {
         public int OperationClaimId { get; set; }
-        public class BulkDeleteUserOperationClaimsByOperationClaimIdCommandHandler : ApplicationFeatureBase<UserOperationClaim>, IRequestHandler<BulkDeleteUserOperationClaimsByOperationClaimIdCommand, Result>
+        public class BulkDeleteUserOperationClaimsByOperationClaimIdCommandHandler : ApplicationFeatureBase<UserOperationClaim>, 
+            IRequestHandler<BulkDeleteUserOperationClaimsByOperationClaimIdCommand, Result>
         {
             public async Task<Result> Handle(BulkDeleteUserOperationClaimsByOperationClaimIdCommand request, CancellationToken cancellationToken)
             {

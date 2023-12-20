@@ -12,20 +12,14 @@ namespace EPortalAdmin.Application.Features.UserOperationClaims.Commands
         public int UserId { get; set; }
         public int OperationClaimId { get; set; }
 
-        public class CreateUserOperationClaimCommandHandler : ApplicationFeatureBase<UserOperationClaim>, IRequestHandler<CreateUserOperationClaimCommand, DataResult<UserOperationClaimDto>>
+        public class CreateUserOperationClaimCommandHandler(UserOperationClaimBusinessRules userOperationClaimBusinessRules) 
+            : ApplicationFeatureBase<UserOperationClaim>, IRequestHandler<CreateUserOperationClaimCommand, DataResult<UserOperationClaimDto>>
         {
-            private readonly UserOperationClaimBusinessRules _userOperationClaimBusinessRules;
-
-            public CreateUserOperationClaimCommandHandler(UserOperationClaimBusinessRules userOperationClaimBusinessRules)
-            {
-                _userOperationClaimBusinessRules = userOperationClaimBusinessRules;
-            }
-
             public async Task<DataResult<UserOperationClaimDto>> Handle(CreateUserOperationClaimCommand request, CancellationToken cancellationToken)
             {
-                await _userOperationClaimBusinessRules.CheckIfUserExist(request.UserId);
-                await _userOperationClaimBusinessRules.CheckIfOperationClaimExist(request.OperationClaimId);
-                await _userOperationClaimBusinessRules.CheckIfUserHasOperationClaim(request.UserId, request.OperationClaimId);
+                await userOperationClaimBusinessRules.CheckIfUserExist(request.UserId);
+                await userOperationClaimBusinessRules.CheckIfOperationClaimExist(request.OperationClaimId);
+                await userOperationClaimBusinessRules.CheckIfUserHasOperationClaim(request.UserId, request.OperationClaimId);
 
                 UserOperationClaim userOperationClaim = Mapper.Map<UserOperationClaim>(request);
 

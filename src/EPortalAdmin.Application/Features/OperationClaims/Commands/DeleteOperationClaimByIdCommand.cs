@@ -12,8 +12,7 @@ namespace EPortalAdmin.Application.Features.OperationClaims.Commands
 
 
 
-        public class DeleteOperationClaimByIdCommandHandler :
-            ApplicationFeatureBase<OperationClaim>, IRequestHandler<DeleteOperationClaimByIdCommand, DataResult<OperationClaimDto>>
+        public class DeleteOperationClaimByIdCommandHandler : ApplicationFeatureBase<OperationClaim>, IRequestHandler<DeleteOperationClaimByIdCommand, DataResult<OperationClaimDto>>
         {
             public async Task<DataResult<OperationClaimDto>> Handle(DeleteOperationClaimByIdCommand request, CancellationToken cancellationToken)
             {

@@ -11,8 +11,7 @@ namespace EPortalAdmin.Application.Features.OperationClaims.Commands
     {
         public int Id { get; set; }
 
-        public class SoftDeleteOperationClaimByIdCommandHandler
-            : ApplicationFeatureBase<OperationClaim>, IRequestHandler<SoftDeleteOperationClaimByIdCommand, DataResult<OperationClaimDto>>
+        public class SoftDeleteOperationClaimByIdCommandHandler : ApplicationFeatureBase<OperationClaim>, IRequestHandler<SoftDeleteOperationClaimByIdCommand, DataResult<OperationClaimDto>>
         {
             public async Task<DataResult<OperationClaimDto>> Handle(SoftDeleteOperationClaimByIdCommand request, CancellationToken cancellationToken)
             {

@@ -5,18 +5,11 @@ using EPortalAdmin.Domain.Constants;
 
 namespace EPortalAdmin.Application.Features.OperationClaims.Rules
 {
-    public class OperationClaimBusinessRules
+    public class OperationClaimBusinessRules(IOperationClaimRepository operationClaimRepository)
     {
-        private readonly IOperationClaimRepository _operationClaimRepository;
-
-        public OperationClaimBusinessRules(IOperationClaimRepository operationClaimRepository)
-        {
-            _operationClaimRepository = operationClaimRepository;
-        }
-
         public async Task OperationClaimNameCanNotBeDuplicated(string name)
         {
-            OperationClaim? operationClaim = await _operationClaimRepository.GetAsync(o => o.Name == name);
+            OperationClaim? operationClaim = await operationClaimRepository.GetAsync(o => o.Name == name);
 
             if (operationClaim != null)
                 throw new BusinessException(Messages.OperationClaim.OperationClaimAlreadyExist);
@@ -24,7 +17,7 @@ namespace EPortalAdmin.Application.Features.OperationClaims.Rules
 
         public async Task CheckIfOperationClaimExist(int operationClaimId)
         {
-            OperationClaim? operationClaim = await _operationClaimRepository.GetAsync(
+            OperationClaim? operationClaim = await operationClaimRepository.GetAsync(
                 o => o.Id == operationClaimId, enableTracking: false)
                 ?? throw new NotFoundException(Messages.OperationClaim.OperationClaimNotFound);
         }

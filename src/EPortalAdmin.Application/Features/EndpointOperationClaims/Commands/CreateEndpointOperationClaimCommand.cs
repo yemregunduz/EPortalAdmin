@@ -13,9 +13,8 @@ namespace EPortalAdmin.Application.Features.EndpointOperationClaims.Commands
         public int OperationClaimId { get; set; }
 
 
-        public class CreateEndpointOperationClaimCommandHandler(EndpointOperationClaimBusinessRules endpointOperationClaimBusinessRules) :
-            ApplicationFeatureBase<EndpointOperationClaim>,
-            IRequestHandler<CreateEndpointOperationClaimCommand, DataResult<EndpointOperationClaimDto>>
+        public class CreateEndpointOperationClaimCommandHandler(EndpointOperationClaimBusinessRules endpointOperationClaimBusinessRules) 
+            : ApplicationFeatureBase<EndpointOperationClaim>,IRequestHandler<CreateEndpointOperationClaimCommand, DataResult<EndpointOperationClaimDto>>
         {
             public async Task<DataResult<EndpointOperationClaimDto>> Handle(CreateEndpointOperationClaimCommand request, CancellationToken cancellationToken)
             {

@@ -9,8 +9,7 @@ namespace EPortalAdmin.Application.Features.UserOperationClaims.Commands
     public class SoftBulkDeleteUserOperationClaimsByUserId : IRequest<Result>
     {
         public int UserId { get; set; }
-        public class SoftBulkDeleteUserOperationClaimsByUserIdHandler :
-            ApplicationFeatureBase<UserOperationClaim>, IRequestHandler<SoftBulkDeleteUserOperationClaimsByUserId, Result>
+        public class SoftBulkDeleteUserOperationClaimsByUserIdHandler : ApplicationFeatureBase<UserOperationClaim>, IRequestHandler<SoftBulkDeleteUserOperationClaimsByUserId, Result>
         {
             public async Task<Result> Handle(SoftBulkDeleteUserOperationClaimsByUserId request, CancellationToken cancellationToken)
             {

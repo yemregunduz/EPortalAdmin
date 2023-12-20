@@ -14,7 +14,8 @@ namespace EPortalAdmin.Application.Features.OperationClaims.Queries
         public PagingRequest PagingRequest { get; set; }
         public Dynamic Dynamic { get; set; }
 
-        public class GetOperationClaimListByDynamicQueryHandler : ApplicationFeatureBase<OperationClaim>, IRequestHandler<GetOperationClaimListByDynamicQuery, DataResult<OperationClaimListDto>>
+        public class GetOperationClaimListByDynamicQueryHandler : ApplicationFeatureBase<OperationClaim>, 
+            IRequestHandler<GetOperationClaimListByDynamicQuery, DataResult<OperationClaimListDto>>
         {
             public async Task<DataResult<OperationClaimListDto>> Handle(GetOperationClaimListByDynamicQuery request, CancellationToken cancellationToken)
             {

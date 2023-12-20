@@ -18,16 +18,9 @@ namespace EPortalAdmin.Application.Features.Authorizations.Commands
         public UserForLoginDto UserForLoginDto { get; set; }
         public string IpAddress { get; set; }
 
-        public class LoginCommandHandler : ApplicationFeatureBase<User>, IRequestHandler<LoginCommand, DataResult<LoggedInDto>>
+        public class LoginCommandHandler(IAuthService authService, IAuthenticatorService authenticatorService) 
+            : ApplicationFeatureBase<User>, IRequestHandler<LoginCommand, DataResult<LoggedInDto>>
         {
-            private readonly IAuthService _authService;
-            private readonly IAuthenticatorService _authenticatorService;
-            public LoginCommandHandler(IAuthService authService, IAuthenticatorService authenticatorService)
-            {
-                _authService = authService;
-                _authenticatorService = authenticatorService;
-            }
-
             public async Task<DataResult<LoggedInDto>> Handle(LoginCommand request, CancellationToken cancellationToken)
             {
                 User? user = await Repository.GetAsync(predicate: u => u.Email == request.UserForLoginDto.Email, cancellationToken: cancellationToken)
@@ -42,20 +35,20 @@ namespace EPortalAdmin.Application.Features.Authorizations.Commands
                 {
                     if (request.UserForLoginDto.AuthenticatorCode is null)
                     {
-                        await _authenticatorService.SendAuthenticatorCode(user);
+                        await authenticatorService.SendAuthenticatorCode(user);
                         loggedInDto.RequiredAuthenticatorType = user.AuthenticatorType;
                         return new SuccessDataResult<LoggedInDto>(loggedInDto);
                     }
 
-                    await _authenticatorService.VerifyAuthenticatorCode(user, request.UserForLoginDto.AuthenticatorCode);
+                    await authenticatorService.VerifyAuthenticatorCode(user, request.UserForLoginDto.AuthenticatorCode);
                 }
-                AccessToken createdAccessToken = await _authService.CreateAccessToken(user);
-                RefreshToken createdRefreshToken = await _authService.CreateRefreshToken(user, request.IpAddress);
-                RefreshToken addedRefreshToken = await _authService.AddRefreshToken(createdRefreshToken);
+                AccessToken createdAccessToken = await authService.CreateAccessToken(user);
+                RefreshToken createdRefreshToken = await authService.CreateRefreshToken(user, request.IpAddress);
+                RefreshToken addedRefreshToken = await authService.AddRefreshToken(createdRefreshToken);
 
                 loggedInDto.AccessToken = createdAccessToken;
                 loggedInDto.RefreshToken = createdRefreshToken;
-                await _authService.DeleteOldRefreshTokens(user.Id);
+                await authService.DeleteOldRefreshTokens(user.Id);
 
                 return new SuccessDataResult<LoggedInDto>(loggedInDto, Messages.Authorization.UserLoggedInSuccessfully);
             }

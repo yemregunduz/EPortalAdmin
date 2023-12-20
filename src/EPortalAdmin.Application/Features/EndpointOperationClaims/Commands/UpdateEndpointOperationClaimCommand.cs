@@ -14,9 +14,8 @@ namespace EPortalAdmin.Application.Features.EndpointOperationClaims.Commands
         public int EndpointId { get; set; }
         public int OperationClaimId { get; set; }
 
-        public class UpdateEndpointOperationClaimCommandHandler(EndpointOperationClaimBusinessRules endpointOperationClaimBusinessRules) : 
-            ApplicationFeatureBase<EndpointOperationClaim>,
-            IRequestHandler<UpdateEndpointOperationClaimCommand, DataResult<EndpointOperationClaimDto>>
+        public class UpdateEndpointOperationClaimCommandHandler(EndpointOperationClaimBusinessRules endpointOperationClaimBusinessRules) 
+            : ApplicationFeatureBase<EndpointOperationClaim>, IRequestHandler<UpdateEndpointOperationClaimCommand, DataResult<EndpointOperationClaimDto>>
         {
             public async Task<DataResult<EndpointOperationClaimDto>> Handle(UpdateEndpointOperationClaimCommand request, CancellationToken cancellationToken)
             {

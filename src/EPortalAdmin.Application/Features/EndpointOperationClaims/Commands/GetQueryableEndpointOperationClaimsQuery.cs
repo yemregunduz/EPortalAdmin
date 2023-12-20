@@ -9,7 +9,7 @@ namespace EPortalAdmin.Application.Features.EndpointOperationClaims.Commands
         public class GetQueryableEndpointOperationClaimsQueryQueryHandler : ApplicationFeatureBase<EndpointOperationClaim>,
             IRequestHandler<GetQueryableEndpointOperationClaimsQuery, IQueryable<EndpointOperationClaimDto>>
         {
-            Task<IQueryable<EndpointOperationClaimDto>> IRequestHandler<GetQueryableEndpointOperationClaimsQuery, IQueryable<EndpointOperationClaimDto>>.Handle(GetQueryableEndpointOperationClaimsQuery request, CancellationToken cancellationToken)
+            public Task<IQueryable<EndpointOperationClaimDto>> Handle(GetQueryableEndpointOperationClaimsQuery request, CancellationToken cancellationToken)
             {
                 IQueryable<EndpointOperationClaim> endpointOperationClaims = Repository.GetAsQueryable();
                 IQueryable<EndpointOperationClaimDto> mappingEndpointOperationClaims= Mapper.ProjectTo<EndpointOperationClaimDto>(endpointOperationClaims);

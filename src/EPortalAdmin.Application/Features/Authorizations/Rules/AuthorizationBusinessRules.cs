@@ -6,31 +6,23 @@ using EPortalAdmin.Domain.Constants;
 
 namespace EPortalAdmin.Application.Features.Authorizations.Rules
 {
-    public class AuthorizationBusinessRules
+    public class AuthorizationBusinessRules(IUserRepository userRepository)
     {
-        private readonly IUserRepository _userRepository;
-
-        public AuthorizationBusinessRules(IUserRepository userRepository)
-        {
-            _userRepository = userRepository;
-        }
-
         public async Task EmailCanNotBeDuplicatedWhenRegistered(string email)
         {
-            User? user = await _userRepository.GetAsync(u => u.Email == email);
+            User? user = await userRepository.GetAsync(u => u.Email == email);
             if (user != null)
-                throw new BusinessException(Messages.Authorization.EmailAlreadyExist);
-
+                throw new BusinessException(Messages.Authorization.EmailAlreadyExist, ExceptionCode.EmailAlreadyExist);
         }
         public void PasswordsCannotBeSameWhenPasswordChanged(string currentPassword, string newPassword)
         {
             if (currentPassword == newPassword)
-                throw new BusinessException(Messages.Authorization.SamePasswordError);
+                throw new BusinessException(Messages.Authorization.SamePasswordError, ExceptionCode.SamePassword);
         }
         public Task UserShouldNotBeHaveAuthenticator(User user)
         {
             if (user.AuthenticatorType != AuthenticatorType.None)
-                throw new BusinessException(Messages.Authorization.UserHaveAlreadyAAuthenticator);
+                throw new BusinessException(Messages.Authorization.UserHaveAlreadyAAuthenticator, ExceptionCode.UserAlreadyHasAuthenticator);
             return Task.CompletedTask;
         }
 
@@ -44,14 +36,14 @@ namespace EPortalAdmin.Application.Features.Authorizations.Rules
         public Task RefreshTokenShouldBeActive(RefreshToken refreshToken)
         {
             if (refreshToken.Revoked != null && DateTime.UtcNow >= refreshToken.Expires)
-                throw new BusinessException(Messages.Authorization.InvalidRefreshToken);
+                throw new BusinessException(Messages.Authorization.InvalidRefreshToken, ExceptionCode.InvalidRefreshToken);
             return Task.CompletedTask;
         }
 
         public Task EmailAuthenticatorActivationKeyShouldBeExists(EmailAuthenticator emailAuthenticator)
         {
             if (emailAuthenticator.ActivationKey is null)
-                throw new BusinessException(Messages.Authorization.EmailActivationKeyDoesntExists);
+                throw new BusinessException(Messages.Authorization.EmailActivationKeyDoesntExists, ExceptionCode.EmailActivationKeyNotFound);
             return Task.CompletedTask;
         }
     }

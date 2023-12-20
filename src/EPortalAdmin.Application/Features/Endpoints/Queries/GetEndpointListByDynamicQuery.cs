@@ -14,8 +14,7 @@ namespace EPortalAdmin.Application.Features.Endpoints.Queries
         public Dynamic Dynamic { get; set; }
         public PagingRequest PagingRequest { get; set; }
 
-        public class GetEndpointListByDynamicQueryHandler : ApplicationFeatureBase<Endpoint>,
-            IRequestHandler<GetEndpointListByDynamicQuery, DataResult<EndpointListDto>>
+        public class GetEndpointListByDynamicQueryHandler : ApplicationFeatureBase<Endpoint>, IRequestHandler<GetEndpointListByDynamicQuery, DataResult<EndpointListDto>>
         {
             public async Task<DataResult<EndpointListDto>> Handle(GetEndpointListByDynamicQuery request, CancellationToken cancellationToken)
             {

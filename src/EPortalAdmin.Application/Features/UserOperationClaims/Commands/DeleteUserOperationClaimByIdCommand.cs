@@ -10,8 +10,8 @@ namespace EPortalAdmin.Application.Features.UserOperationClaims.Commands
     {
         public int Id { get; set; }
 
-        public class DeleteUserOperationClaimByIdCommandHandler :
-            ApplicationFeatureBase<UserOperationClaim>, IRequestHandler<DeleteUserOperationClaimByIdCommand, DataResult<UserOperationClaimDto>>
+        public class DeleteUserOperationClaimByIdCommandHandler : ApplicationFeatureBase<UserOperationClaim>, 
+            IRequestHandler<DeleteUserOperationClaimByIdCommand, DataResult<UserOperationClaimDto>>
         {
             public async Task<DataResult<UserOperationClaimDto>> Handle(DeleteUserOperationClaimByIdCommand request, CancellationToken cancellationToken)
             {
